@@ -1,0 +1,1200 @@
+{
+  "source": "Transformers 5.19.0 Qwen PIL/video smart_resize and sample_frames; Python float formatting",
+  "resize": [
+    {
+      "height": 1,
+      "width": 1,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        32,
+        32
+      ]
+    },
+    {
+      "height": 1,
+      "width": 1,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        256,
+        256
+      ]
+    },
+    {
+      "height": 1,
+      "width": 64,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        256,
+        32
+      ]
+    },
+    {
+      "height": 1,
+      "width": 64,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        2048,
+        32
+      ]
+    },
+    {
+      "height": 80,
+      "width": 112,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        64,
+        32
+      ]
+    },
+    {
+      "height": 80,
+      "width": 112,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        320,
+        224
+      ]
+    },
+    {
+      "height": 112,
+      "width": 80,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        32,
+        64
+      ]
+    },
+    {
+      "height": 112,
+      "width": 80,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        224,
+        320
+      ]
+    },
+    {
+      "height": 127,
+      "width": 65,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        32,
+        64
+      ]
+    },
+    {
+      "height": 127,
+      "width": 65,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        192,
+        384
+      ]
+    },
+    {
+      "height": 512,
+      "width": 768,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        64,
+        32
+      ]
+    },
+    {
+      "height": 512,
+      "width": 768,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        608,
+        416
+      ]
+    },
+    {
+      "height": 2048,
+      "width": 2048,
+      "factor": 32,
+      "minimum": 1024,
+      "maximum": 4096,
+      "expected": [
+        64,
+        64
+      ]
+    },
+    {
+      "height": 2048,
+      "width": 2048,
+      "factor": 32,
+      "minimum": 65536,
+      "maximum": 262144,
+      "expected": [
+        512,
+        512
+      ]
+    },
+    {
+      "height": 16,
+      "width": 48,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 2,
+      "temporal": 2,
+      "expected": [
+        96,
+        32
+      ]
+    },
+    {
+      "height": 64,
+      "width": 96,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 2,
+      "temporal": 2,
+      "expected": [
+        96,
+        64
+      ]
+    },
+    {
+      "height": 80,
+      "width": 112,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 2,
+      "temporal": 2,
+      "expected": [
+        128,
+        64
+      ]
+    },
+    {
+      "height": 16,
+      "width": 48,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 3,
+      "temporal": 2,
+      "expected": [
+        96,
+        32
+      ]
+    },
+    {
+      "height": 64,
+      "width": 96,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 3,
+      "temporal": 2,
+      "expected": [
+        96,
+        64
+      ]
+    },
+    {
+      "height": 80,
+      "width": 112,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 3,
+      "temporal": 2,
+      "expected": [
+        128,
+        64
+      ]
+    },
+    {
+      "height": 16,
+      "width": 48,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 4,
+      "temporal": 2,
+      "expected": [
+        96,
+        32
+      ]
+    },
+    {
+      "height": 64,
+      "width": 96,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 4,
+      "temporal": 2,
+      "expected": [
+        96,
+        64
+      ]
+    },
+    {
+      "height": 80,
+      "width": 112,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 4,
+      "temporal": 2,
+      "expected": [
+        128,
+        64
+      ]
+    },
+    {
+      "height": 16,
+      "width": 48,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 16,
+      "temporal": 2,
+      "expected": [
+        96,
+        32
+      ]
+    },
+    {
+      "height": 64,
+      "width": 96,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 16,
+      "temporal": 2,
+      "expected": [
+        96,
+        64
+      ]
+    },
+    {
+      "height": 80,
+      "width": 112,
+      "factor": 32,
+      "minimum": 4096,
+      "maximum": 131072,
+      "frames": 16,
+      "temporal": 2,
+      "expected": [
+        128,
+        64
+      ]
+    }
+  ],
+  "indices": [
+    {
+      "total": 2,
+      "fps": 2,
+      "config": {
+        "num_frames": 2,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "total": 2,
+      "fps": 2,
+      "config": {
+        "num_frames": 3,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "total": 2,
+      "fps": 2,
+      "config": {
+        "num_frames": 16,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "total": 2,
+      "fps": 2,
+      "config": {
+        "num_frames": null,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "total": 2,
+      "fps": 2,
+      "config": {
+        "num_frames": null,
+        "fps": 1,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "total": 6,
+      "fps": 3,
+      "config": {
+        "num_frames": 2,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        5
+      ]
+    },
+    {
+      "total": 6,
+      "fps": 3,
+      "config": {
+        "num_frames": 3,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        2,
+        5
+      ]
+    },
+    {
+      "total": 6,
+      "fps": 3,
+      "config": {
+        "num_frames": 16,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5,
+        5
+      ]
+    },
+    {
+      "total": 6,
+      "fps": 3,
+      "config": {
+        "num_frames": null,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "total": 6,
+      "fps": 3,
+      "config": {
+        "num_frames": null,
+        "fps": 1,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "total": 4,
+      "fps": 29.97,
+      "config": {
+        "num_frames": 2,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        3
+      ]
+    },
+    {
+      "total": 4,
+      "fps": 29.97,
+      "config": {
+        "num_frames": 3,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        2,
+        3
+      ]
+    },
+    {
+      "total": 4,
+      "fps": 29.97,
+      "config": {
+        "num_frames": 16,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "total": 4,
+      "fps": 29.97,
+      "config": {
+        "num_frames": null,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "total": 4,
+      "fps": 29.97,
+      "config": {
+        "num_frames": null,
+        "fps": 1,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "total": 50,
+      "fps": 30,
+      "config": {
+        "num_frames": 2,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        49
+      ]
+    },
+    {
+      "total": 50,
+      "fps": 30,
+      "config": {
+        "num_frames": 3,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        24,
+        49
+      ]
+    },
+    {
+      "total": 50,
+      "fps": 30,
+      "config": {
+        "num_frames": 16,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        3,
+        7,
+        10,
+        13,
+        16,
+        20,
+        23,
+        26,
+        29,
+        33,
+        36,
+        39,
+        42,
+        46,
+        49
+      ]
+    },
+    {
+      "total": 50,
+      "fps": 30,
+      "config": {
+        "num_frames": null,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        16,
+        33,
+        49
+      ]
+    },
+    {
+      "total": 50,
+      "fps": 30,
+      "config": {
+        "num_frames": null,
+        "fps": 1,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        16,
+        33,
+        49
+      ]
+    },
+    {
+      "total": 100,
+      "fps": 24,
+      "config": {
+        "num_frames": 2,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        99
+      ]
+    },
+    {
+      "total": 100,
+      "fps": 24,
+      "config": {
+        "num_frames": 3,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        50,
+        99
+      ]
+    },
+    {
+      "total": 100,
+      "fps": 24,
+      "config": {
+        "num_frames": 16,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        7,
+        13,
+        20,
+        26,
+        33,
+        40,
+        46,
+        53,
+        59,
+        66,
+        73,
+        79,
+        86,
+        92,
+        99
+      ]
+    },
+    {
+      "total": 100,
+      "fps": 24,
+      "config": {
+        "num_frames": null,
+        "fps": null,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        14,
+        28,
+        42,
+        57,
+        71,
+        85,
+        99
+      ]
+    },
+    {
+      "total": 100,
+      "fps": 24,
+      "config": {
+        "num_frames": null,
+        "fps": 1,
+        "min_frames": 4,
+        "max_frames": 768
+      },
+      "expected": [
+        0,
+        33,
+        66,
+        99
+      ]
+    }
+  ],
+  "timestamps": [
+    {
+      "value": 0,
+      "expected": "0.0"
+    },
+    {
+      "value": 0.05,
+      "expected": "0.1"
+    },
+    {
+      "value": 0.15,
+      "expected": "0.1"
+    },
+    {
+      "value": 0.25,
+      "expected": "0.2"
+    },
+    {
+      "value": 0.35,
+      "expected": "0.3"
+    },
+    {
+      "value": 0.45,
+      "expected": "0.5"
+    },
+    {
+      "value": 2.25,
+      "expected": "2.2"
+    },
+    {
+      "value": 2.35,
+      "expected": "2.4"
+    },
+    {
+      "value": 999.95,
+      "expected": "1000.0"
+    },
+    {
+      "value": 0.0,
+      "expected": "0.0"
+    },
+    {
+      "value": 0.041666666666666664,
+      "expected": "0.0"
+    },
+    {
+      "value": 0.08333333333333333,
+      "expected": "0.1"
+    },
+    {
+      "value": 0.125,
+      "expected": "0.1"
+    },
+    {
+      "value": 0.16666666666666666,
+      "expected": "0.2"
+    },
+    {
+      "value": 0.20833333333333334,
+      "expected": "0.2"
+    },
+    {
+      "value": 0.25,
+      "expected": "0.2"
+    },
+    {
+      "value": 0.2916666666666667,
+      "expected": "0.3"
+    },
+    {
+      "value": 0.3333333333333333,
+      "expected": "0.3"
+    },
+    {
+      "value": 0.375,
+      "expected": "0.4"
+    },
+    {
+      "value": 0.4166666666666667,
+      "expected": "0.4"
+    },
+    {
+      "value": 0.4583333333333333,
+      "expected": "0.5"
+    },
+    {
+      "value": 0.5,
+      "expected": "0.5"
+    },
+    {
+      "value": 0.5416666666666666,
+      "expected": "0.5"
+    },
+    {
+      "value": 0.5833333333333334,
+      "expected": "0.6"
+    },
+    {
+      "value": 0.625,
+      "expected": "0.6"
+    },
+    {
+      "value": 0.6666666666666666,
+      "expected": "0.7"
+    },
+    {
+      "value": 0.7083333333333334,
+      "expected": "0.7"
+    },
+    {
+      "value": 0.75,
+      "expected": "0.8"
+    },
+    {
+      "value": 0.7916666666666666,
+      "expected": "0.8"
+    },
+    {
+      "value": 0.8333333333333334,
+      "expected": "0.8"
+    },
+    {
+      "value": 0.875,
+      "expected": "0.9"
+    },
+    {
+      "value": 0.9166666666666666,
+      "expected": "0.9"
+    },
+    {
+      "value": 0.9583333333333334,
+      "expected": "1.0"
+    },
+    {
+      "value": 1.0,
+      "expected": "1.0"
+    },
+    {
+      "value": 1.0416666666666667,
+      "expected": "1.0"
+    },
+    {
+      "value": 1.0833333333333333,
+      "expected": "1.1"
+    },
+    {
+      "value": 1.125,
+      "expected": "1.1"
+    },
+    {
+      "value": 1.1666666666666667,
+      "expected": "1.2"
+    },
+    {
+      "value": 1.2083333333333333,
+      "expected": "1.2"
+    },
+    {
+      "value": 1.25,
+      "expected": "1.2"
+    },
+    {
+      "value": 1.2916666666666667,
+      "expected": "1.3"
+    },
+    {
+      "value": 1.3333333333333333,
+      "expected": "1.3"
+    },
+    {
+      "value": 1.375,
+      "expected": "1.4"
+    },
+    {
+      "value": 1.4166666666666667,
+      "expected": "1.4"
+    },
+    {
+      "value": 1.4583333333333333,
+      "expected": "1.5"
+    },
+    {
+      "value": 1.5,
+      "expected": "1.5"
+    },
+    {
+      "value": 1.5416666666666667,
+      "expected": "1.5"
+    },
+    {
+      "value": 1.5833333333333333,
+      "expected": "1.6"
+    },
+    {
+      "value": 1.625,
+      "expected": "1.6"
+    },
+    {
+      "value": 1.6666666666666667,
+      "expected": "1.7"
+    },
+    {
+      "value": 1.7083333333333333,
+      "expected": "1.7"
+    },
+    {
+      "value": 1.75,
+      "expected": "1.8"
+    },
+    {
+      "value": 1.7916666666666667,
+      "expected": "1.8"
+    },
+    {
+      "value": 1.8333333333333333,
+      "expected": "1.8"
+    },
+    {
+      "value": 1.875,
+      "expected": "1.9"
+    },
+    {
+      "value": 1.9166666666666667,
+      "expected": "1.9"
+    },
+    {
+      "value": 1.9583333333333333,
+      "expected": "2.0"
+    },
+    {
+      "value": 2.0,
+      "expected": "2.0"
+    },
+    {
+      "value": 2.0416666666666665,
+      "expected": "2.0"
+    },
+    {
+      "value": 2.0833333333333335,
+      "expected": "2.1"
+    },
+    {
+      "value": 2.125,
+      "expected": "2.1"
+    },
+    {
+      "value": 2.1666666666666665,
+      "expected": "2.2"
+    },
+    {
+      "value": 2.2083333333333335,
+      "expected": "2.2"
+    },
+    {
+      "value": 2.25,
+      "expected": "2.2"
+    },
+    {
+      "value": 2.2916666666666665,
+      "expected": "2.3"
+    },
+    {
+      "value": 2.3333333333333335,
+      "expected": "2.3"
+    },
+    {
+      "value": 2.375,
+      "expected": "2.4"
+    },
+    {
+      "value": 2.4166666666666665,
+      "expected": "2.4"
+    },
+    {
+      "value": 2.4583333333333335,
+      "expected": "2.5"
+    },
+    {
+      "value": 2.5,
+      "expected": "2.5"
+    },
+    {
+      "value": 2.5416666666666665,
+      "expected": "2.5"
+    },
+    {
+      "value": 2.5833333333333335,
+      "expected": "2.6"
+    },
+    {
+      "value": 2.625,
+      "expected": "2.6"
+    },
+    {
+      "value": 2.6666666666666665,
+      "expected": "2.7"
+    },
+    {
+      "value": 2.7083333333333335,
+      "expected": "2.7"
+    },
+    {
+      "value": 2.75,
+      "expected": "2.8"
+    },
+    {
+      "value": 2.7916666666666665,
+      "expected": "2.8"
+    },
+    {
+      "value": 2.8333333333333335,
+      "expected": "2.8"
+    },
+    {
+      "value": 2.875,
+      "expected": "2.9"
+    },
+    {
+      "value": 2.9166666666666665,
+      "expected": "2.9"
+    },
+    {
+      "value": 2.9583333333333335,
+      "expected": "3.0"
+    },
+    {
+      "value": 3.0,
+      "expected": "3.0"
+    },
+    {
+      "value": 3.0416666666666665,
+      "expected": "3.0"
+    },
+    {
+      "value": 3.0833333333333335,
+      "expected": "3.1"
+    },
+    {
+      "value": 3.125,
+      "expected": "3.1"
+    },
+    {
+      "value": 3.1666666666666665,
+      "expected": "3.2"
+    },
+    {
+      "value": 3.2083333333333335,
+      "expected": "3.2"
+    },
+    {
+      "value": 3.25,
+      "expected": "3.2"
+    },
+    {
+      "value": 3.2916666666666665,
+      "expected": "3.3"
+    },
+    {
+      "value": 3.3333333333333335,
+      "expected": "3.3"
+    },
+    {
+      "value": 3.375,
+      "expected": "3.4"
+    },
+    {
+      "value": 3.4166666666666665,
+      "expected": "3.4"
+    },
+    {
+      "value": 3.4583333333333335,
+      "expected": "3.5"
+    },
+    {
+      "value": 3.5,
+      "expected": "3.5"
+    },
+    {
+      "value": 3.5416666666666665,
+      "expected": "3.5"
+    },
+    {
+      "value": 3.5833333333333335,
+      "expected": "3.6"
+    },
+    {
+      "value": 3.625,
+      "expected": "3.6"
+    },
+    {
+      "value": 3.6666666666666665,
+      "expected": "3.7"
+    },
+    {
+      "value": 3.7083333333333335,
+      "expected": "3.7"
+    },
+    {
+      "value": 3.75,
+      "expected": "3.8"
+    },
+    {
+      "value": 3.7916666666666665,
+      "expected": "3.8"
+    },
+    {
+      "value": 3.8333333333333335,
+      "expected": "3.8"
+    },
+    {
+      "value": 3.875,
+      "expected": "3.9"
+    },
+    {
+      "value": 3.9166666666666665,
+      "expected": "3.9"
+    },
+    {
+      "value": 3.9583333333333335,
+      "expected": "4.0"
+    },
+    {
+      "value": 4.0,
+      "expected": "4.0"
+    },
+    {
+      "value": 4.041666666666667,
+      "expected": "4.0"
+    },
+    {
+      "value": 4.083333333333333,
+      "expected": "4.1"
+    },
+    {
+      "value": 4.125,
+      "expected": "4.1"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "name": "@valen/sdk",
+  "version": "0.2.0-dev.1",
+  "description": "Valen decision SDK for HTTP and local ONNX inference",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "LICENSE",
+    "PILLOW-LICENSE.txt",
+    "README.md",
+    "README_zh.md",
+    "THIRD_PARTY_NOTICES.md",
+    "src",
+    "examples",
+    "assets/branding"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "typecheck": "tsc --noEmit --allowJs --checkJs false --module nodenext --target es2022 src/index.d.ts --types node"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@huggingface/jinja": "0.5.10",
+    "@huggingface/tokenizers": "0.2.0",
+    "@huggingface/transformers": "4.3.1",
+    "ffmpeg-static": "^5.3.0",
+    "ffprobe-static": "^3.1.0",
+    "onnxruntime-node": "1.30.0",
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0",
+    "typescript": "^5.9.0",
+    "@types/node": "26.6.5"
+  },
+  "peerDependencies": {
+    "@huggingface/jinja": "0.5.10",
+    "@huggingface/tokenizers": "0.2.0",
+    "@huggingface/transformers": "4.3.1",
+    "onnxruntime-node": "1.30.0",
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0"
+  },
+  "peerDependenciesMeta": {
+    "@huggingface/transformers": {
+      "optional": true
+    },
+    "@huggingface/tokenizers": {
+      "optional": true
+    },
+    "@huggingface/jinja": {
+      "optional": true
+    },
+    "onnxruntime-node": {
+      "optional": true
+    },
+    "onnxruntime-web": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "mediabunny": "1.62.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valen-team/valen-sdk-js.git"
+  },
+  "homepage": "https://github.com/valen-team/valen-sdk-js#readme"
+}

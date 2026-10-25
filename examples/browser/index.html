@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="icon" href="data:,">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valen · Browser decisions</title>
+  <style>
+    body { max-width: 700px; margin: 60px auto; padding: 0 24px; font: 17px/1.6 system-ui, sans-serif; color: #17263a; }
+    textarea { width: 100%; min-height: 100px; box-sizing: border-box; padding: 12px; font: inherit; }
+    button { margin-top: 16px; padding: 12px 20px; background: #2854c5; border: 0; border-radius: 8px; color: white; font: inherit; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+    pre { white-space: pre-wrap; background: #f3f5f9; padding: 16px; border-radius: 8px; }
+    small { display: block; color: #526174; }
+  </style>
+</head>
+<body>
+  <h1>Valen browser decisions</h1>
+  <p>Does this customer want to change their delivery address?</p>
+  <form>
+    <textarea name="message" aria-label="Customer message" required>I moved. Please ship my order to 12 Elm Street instead.</textarea>
+    <button>Run locally</button>
+  </form>
+  <p id="status" aria-live="polite">Uses Valen-0.8B on WebGPU. First use downloads model files; later runs reuse the browser cache.</p>
+  <pre id="result">Your result will appear here.</pre>
+  <small>Inputs are processed in this browser. The full model variant is about 2.44 GB; only components needed by the request are fetched.</small>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
