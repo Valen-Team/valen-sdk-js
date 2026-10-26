@@ -1,4 +1,4 @@
-import { Valen } from '@valen/sdk';
+import { Valen } from '@valen-team/sdk';
 
 const form = document.querySelector('form');
 const button = form.querySelector('button');

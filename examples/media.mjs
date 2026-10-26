@@ -1,4 +1,4 @@
-import { Valen } from '@valen/sdk';
+import { Valen } from '@valen-team/sdk';
 
 const [path, mode] = process.argv.slice(2);
 const video = mode === '--video';

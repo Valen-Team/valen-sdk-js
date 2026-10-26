@@ -1,11 +1,9 @@
-# Releasing 0.2.0
+# Releasing @valen-team/sdk 0.2.0
 
-Publication status: GitHub artifact release; PyPI/npm not yet published. Package names were absent from their registries at preflight. No registry credentials, repository publishing secrets or existing trusted-publishing workflows were found. GitHub/HF credentials must not be reused for package registries.
+The npm release target is `@valen-team/sdk`. The original `@valen` scope was unavailable. The existing GitHub `v0.2.0` tag is preserved; the `npm-v0.2.0` tag records the new scope. Change dependency names and imports to `@valen-team/sdk`. Inference source and dependency versions are unchanged.
 
-Verify the GitHub release SHA256SUMS before installation. Tests cover HTTP contracts, errors, retries, assets, lifecycle and preprocessing. Existing real-model validation is reused; package smoke tests do not establish new backend/platform support.
+The authorized npm account must have publishing rights in the `valen-team` organization. From the reviewed source run `npm test`, `npm run typecheck`, and `npm pack --ignore-scripts`. Inspect the tarball, then publish that exact tarball with `npm publish PATH_TO_TARBALL --access public --registry=https://registry.npmjs.org`. Complete any interactive 2FA challenge in the browser. Do not commit registry credentials or reuse GitHub/HF credentials.
 
-Python: configure a PyPI Trusted Publisher for Valen-Team/valen-sdk-python, workflow `publish.yml`, environment `pypi`, or use a scoped PyPI token outside Git. Run the manual workflow after configuring the publisher. The environment must exist and should require maintainer review. The workflow builds and checks wheel/sdist, then uses OIDC; it does not run on ordinary push.
+After publication query `https://registry.npmjs.org/@valen-team%2fsdk/0.2.0`; verify the exact name/version, integrity, file size and dist-tag. Update the bilingual README and website only after the registry confirms publication. The published tarball is immutable; GitHub artifact hashes are recorded separately. The earlier GitHub release used a different scope and is not evidence of npm publication.
 
-JavaScript: an authorized npm account must own/create @valen scope and have publish rights for @valen/sdk. From a clean v0.2.0 checkout run `npm test`, `npm run typecheck`, `npm pack --dry-run`, then `npm publish --access public` with the account's authorized authentication/2FA. No npm credential is stored in this repository. Optionally configure npm trusted publishing in npm after establishing package ownership.
-
-After publication query `https://pypi.org/pypi/valen-sdk/0.2.0/json` and `https://registry.npmjs.org/@valen%2fsdk/0.2.0`, compare filenames/digests, perform a clean small-package install with optional model dependencies disabled, and update README and release notes to reflect actual registry availability.
+For future automated releases, configure npm Trusted Publishing on the existing package and an appropriate GitHub Actions workflow. npm registration alone does not authorize a GitHub workflow. Python `valen-sdk` is already published on PyPI and is independent of this npm scope migration.

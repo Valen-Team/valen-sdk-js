@@ -1,5 +1,5 @@
 {
-  "name": "@valen/sdk",
+  "name": "@valen-team/sdk",
   "version": "0.2.0",
   "description": "Valen decision SDK for HTTP and local ONNX inference",
   "type": "module",
@@ -73,5 +73,8 @@
     "type": "git",
     "url": "https://github.com/valen-team/valen-sdk-js.git"
   },
-  "homepage": "https://github.com/valen-team/valen-sdk-js#readme"
+  "homepage": "https://github.com/valen-team/valen-sdk-js#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }

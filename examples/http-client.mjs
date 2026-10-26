@@ -1,4 +1,4 @@
-import { Valen } from '@valen/sdk';
+import { Valen } from '@valen-team/sdk';
 
 const client = Valen.remote('http://127.0.0.1:8000/v1', { model: 'valen' });
 try {

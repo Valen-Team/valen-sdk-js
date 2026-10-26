@@ -1,4 +1,4 @@
-import { Valen } from '@valen/sdk';
+import { Valen } from '@valen-team/sdk';
 
 const client = await Valen.local('Valen-Team/Valen-0.8B-ONNX', { variant: 'fp32' });
 try {
