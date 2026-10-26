@@ -18,6 +18,11 @@
 
 将 Valen 决策接入 Node.js 服务或浏览器应用。输入文本、图片或视频，获取类别、是非概率和评分，用于路由、筛选和排序。支持本地 ONNX 推理，也可通过 HTTP 调用已有服务；包内提供 TypeScript 类型。
 
+## 完整应用教程
+
+完整业务流程只在[官网 Cookbook](https://valen-team.github.io/zh-Hans/cookbook/)维护：[工单分流](https://valen-team.github.io/zh-Hans/cookbook/ticket-routing/)、[商品图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)。代码、样例和实测结果来自同一维护源。本仓库保留 SDK 接口与安装示例；`Valen.local` 是 ONNX 路径，GGUF 服务使用远程 HTTP 客户端。C++ 集成的支持范围以本仓库说明为准。
+
+
 ## 稳定版本 0.2.0
 
 已正式发布到 [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0)：
@@ -94,21 +99,7 @@ npm run dev
 
 ## 图片和视频
 
-回到 SDK 仓库根目录后运行图片示例：
-
-```bash
-curl -L https://raw.githubusercontent.com/Valen-Team/Valen/main/assets/cookbook/sheep.jpg -o sheep.jpg
-node examples/media.mjs sheep.jpg
-```
-
-Node 视频需要 FFmpeg 和 ffprobe；macOS 使用 `brew install ffmpeg`，Debian/Ubuntu 使用 `sudo apt install ffmpeg` 安装。示例采样四帧：
-
-```bash
-curl -L https://raw.githubusercontent.com/Valen-Team/Valen/main/assets/cookbook/momos.mp4 -o momos.mp4
-node examples/media.mjs momos.mp4 --video
-```
-
-[媒体示例](examples/media.mjs) 使用 `input_image` / `input_video` 消息和本地路径。浏览器视频解码使用 WebCodecs，支持的格式由浏览器决定。
+本地媒体接口的最短示例保留在 `examples/`；完整输入、依赖、运行命令、结果与不确定性处理统一见[图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)和[直接视频基础](https://valen-team.github.io/zh-Hans/cookbook/local-inference/)。共享素材 `Valen/assets/cookbook/` 的 URL 保持不变。
 
 ## HTTP 客户端
 

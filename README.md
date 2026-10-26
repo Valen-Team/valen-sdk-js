@@ -18,6 +18,11 @@
 
 Add Valen decisions to a Node.js service or browser application. Turn text, images and video into categories, yes/no probabilities and scores for routing, screening and ranking. Run local ONNX inference or call an existing HTTP service. TypeScript declarations are included.
 
+## Complete application tutorials
+
+Complete workflows are maintained in the [official Cookbook](https://valen-team.github.io/cookbook/): [ticket routing](https://valen-team.github.io/cookbook/ticket-routing/), [product-image screening](https://valen-team.github.io/cookbook/product-screening/) and [video tagging](https://valen-team.github.io/cookbook/video-tagging/). Code, samples and measured outputs share one source. This repository retains SDK interface and installation examples. `Valen.local` loads ONNX; connect to GGUF services over HTTP. C++ support remains scoped by this repository's reference.
+
+
 ## Stable version 0.2.0
 
 Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0):
@@ -94,21 +99,7 @@ From `examples/browser`, run `npm run build` to build and `npm run preview` to p
 
 ## Images and video
 
-From the SDK repository root, run the image example:
-
-```bash
-curl -L https://raw.githubusercontent.com/Valen-Team/Valen/main/assets/cookbook/sheep.jpg -o sheep.jpg
-node examples/media.mjs sheep.jpg
-```
-
-Node video needs FFmpeg and ffprobe. Install with `brew install ffmpeg` on macOS or `sudo apt install ffmpeg` on Debian/Ubuntu. The example samples four frames:
-
-```bash
-curl -L https://raw.githubusercontent.com/Valen-Team/Valen/main/assets/cookbook/momos.mp4 -o momos.mp4
-node examples/media.mjs momos.mp4 --video
-```
-
-[The media example](examples/media.mjs) uses `input_image` / `input_video` messages and local paths. Browser video decoding uses WebCodecs; supported codecs depend on the browser.
+Minimal local media interface examples remain in `examples/`. Complete inputs, dependencies, commands, outputs and uncertainty handling live in [product screening](https://valen-team.github.io/cookbook/product-screening/), [video tagging](https://valen-team.github.io/cookbook/video-tagging/) and [direct-video basics](https://valen-team.github.io/cookbook/local-inference/). Shared `Valen/assets/cookbook/` URLs remain stable.
 
 ## HTTP client
 
