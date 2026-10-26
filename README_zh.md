@@ -18,12 +18,28 @@
 
 将 Valen 决策接入 Node.js 服务或浏览器应用。输入文本、图片或视频，获取类别、是非概率和评分，用于路由、筛选和排序。支持本地 ONNX 推理，也可通过 HTTP 调用已有服务；包内提供 TypeScript 类型。
 
+## 稳定版本 0.2.0
+
+GitHub 稳定发布安装（不代表已发布到 PyPI/npm）：
+
+```sh
+npm install https://github.com/Valen-Team/valen-sdk-js/releases/download/v0.2.0/valen-sdk-0.2.0.tgz
+```
+
+注册表发布仍需维护者配置权限；仅在注册表可查到 0.2.0 后使用：
+
+```sh
+npm install @valen/sdk@0.2.0
+```
+
+首次体验优先使用[网页或免费 API](https://valen-team.github.io/)。完整[版本选择](https://valen-team.github.io/zh-Hans/docs/valen/choosing/)。
+
 ## Node.js 快速开始
 
 建议使用 Node.js 22.12+ 或 24，以及 Git。以下示例使用 CPU：
 
 ```bash
-git clone https://github.com/valen-team/valen-sdk-js.git
+git clone --branch v0.2.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
 cd valen-sdk-js
 npm ci --ignore-scripts
 node examples/local.mjs
@@ -42,7 +58,7 @@ Explicitness score (0–2): 1.921
 在自己的项目中安装：
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git
+npm install https://github.com/valen-team/valen-sdk-js.git#v0.2.0
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
@@ -103,7 +119,7 @@ node examples/media.mjs momos.mp4 --video
 已有 Valen HTTP 服务时，只安装 SDK 即可使用，模型在服务端运行：
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git
+npm install https://github.com/valen-team/valen-sdk-js.git#v0.2.0
 ```
 
 ```js

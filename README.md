@@ -18,12 +18,28 @@
 
 Add Valen decisions to a Node.js service or browser application. Turn text, images and video into categories, yes/no probabilities and scores for routing, screening and ranking. Run local ONNX inference or call an existing HTTP service. TypeScript declarations are included.
 
+## Stable version 0.2.0
+
+Install the GitHub stable release (this does not mean publication on PyPI/npm):
+
+```sh
+npm install https://github.com/Valen-Team/valen-sdk-js/releases/download/v0.2.0/valen-sdk-0.2.0.tgz
+```
+
+Registry publication still requires maintainer permissions. Only after 0.2.0 appears in the registry, use:
+
+```sh
+npm install @valen/sdk@0.2.0
+```
+
+For a first try, use the [web experience or free API](https://valen-team.github.io/). See [version selection](https://valen-team.github.io/docs/valen/choosing/).
+
 ## Node.js quick start
 
 Use Node.js 22.12+ or 24 and Git. This example runs on CPU:
 
 ```bash
-git clone https://github.com/valen-team/valen-sdk-js.git
+git clone --branch v0.2.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
 cd valen-sdk-js
 npm ci --ignore-scripts
 node examples/local.mjs
@@ -42,7 +58,7 @@ Explicitness score (0–2): 1.921
 To install in your own application:
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git
+npm install https://github.com/valen-team/valen-sdk-js.git#v0.2.0
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
@@ -103,7 +119,7 @@ node examples/media.mjs momos.mp4 --video
 For an existing Valen service, install only the SDK; inference runs on the server:
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git
+npm install https://github.com/valen-team/valen-sdk-js.git#v0.2.0
 ```
 
 ```js

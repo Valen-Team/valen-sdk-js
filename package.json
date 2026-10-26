@@ -1,6 +1,6 @@
 {
   "name": "@valen/sdk",
-  "version": "0.2.0-dev.1",
+  "version": "0.2.0",
   "description": "Valen decision SDK for HTTP and local ONNX inference",
   "type": "module",
   "main": "./src/index.js",
@@ -19,7 +19,9 @@
     "THIRD_PARTY_NOTICES.md",
     "src",
     "examples",
-    "assets/branding"
+    "assets/branding",
+    "CHANGELOG.md",
+    "RELEASING.md"
   ],
   "scripts": {
     "test": "node --test",
