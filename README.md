@@ -20,19 +20,15 @@ Add Valen decisions to a Node.js service or browser application. Turn text, imag
 
 ## Stable version 0.2.0
 
-Install the GitHub stable release (this does not mean publication on PyPI/npm):
-
-```sh
-npm install https://github.com/Valen-Team/valen-sdk-js/releases/download/npm-v0.2.0/valen-team-sdk-0.2.0.tgz
-```
-
-Registry publication still requires maintainer permissions. Only after 0.2.0 appears in the registry, use:
+Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0):
 
 ```sh
 npm install @valen-team/sdk@0.2.0
 ```
 
-For a first try, use the [web experience or free API](https://valen-team.github.io/). See [version selection](https://valen-team.github.io/docs/valen/choosing/).
+Import with `import { Valen } from '@valen-team/sdk'`. The package name is `@valen-team/sdk`; the earlier planned `@valen/sdk` was never published on npm and should no longer be used. Inference source and dependency versions are unchanged. HTTP clients need no model download; local ONNX inference additionally requires the optional runtime dependencies listed below.
+
+[GitHub npm-v0.2.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.2.0) records the corresponding source and publication evidence. For a first try, you can also use the [web experience or free API](https://valen-team.github.io/).
 
 ## Node.js quick start
 
@@ -58,7 +54,7 @@ Explicitness score (0–2): 1.921
 To install in your own application:
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git#npm-v0.2.0
+npm install @valen-team/sdk@0.2.0
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
@@ -119,7 +115,7 @@ node examples/media.mjs momos.mp4 --video
 For an existing Valen service, install only the SDK; inference runs on the server:
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git#npm-v0.2.0
+npm install @valen-team/sdk@0.2.0
 ```
 
 ```js

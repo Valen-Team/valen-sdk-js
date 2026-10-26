@@ -1,6 +1,6 @@
 # Releasing @valen-team/sdk 0.2.0
 
-The npm release target is `@valen-team/sdk`. The original `@valen` scope was unavailable. The existing GitHub `v0.2.0` tag is preserved; the `npm-v0.2.0` tag records the new scope. Change dependency names and imports to `@valen-team/sdk`. Inference source and dependency versions are unchanged.
+Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0) as `@valen-team/sdk@0.2.0`; `latest` points to `0.2.0`. Registry integrity matches the reviewed artifact; see `validation/npm-0.2.0.json`. The npm package name is `@valen-team/sdk`. The original `@valen` scope was unavailable. The existing GitHub `v0.2.0` tag is preserved; the `npm-v0.2.0` tag records the new scope. Change dependency names and imports to `@valen-team/sdk`. Inference source and dependency versions are unchanged.
 
 The authorized npm account must have publishing rights in the `valen-team` organization. From the reviewed source run `npm test`, `npm run typecheck`, and `npm pack --ignore-scripts`. Inspect the tarball, then publish that exact tarball with `npm publish PATH_TO_TARBALL --access public --registry=https://registry.npmjs.org`. Complete any interactive 2FA challenge in the browser. Do not commit registry credentials or reuse GitHub/HF credentials.
 

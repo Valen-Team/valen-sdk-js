@@ -20,19 +20,15 @@
 
 ## 稳定版本 0.2.0
 
-GitHub 稳定发布安装（不代表已发布到 PyPI/npm）：
-
-```sh
-npm install https://github.com/Valen-Team/valen-sdk-js/releases/download/npm-v0.2.0/valen-team-sdk-0.2.0.tgz
-```
-
-注册表发布仍需维护者配置权限；仅在注册表可查到 0.2.0 后使用：
+已正式发布到 [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0)：
 
 ```sh
 npm install @valen-team/sdk@0.2.0
 ```
 
-首次体验优先使用[网页或免费 API](https://valen-team.github.io/)。完整[版本选择](https://valen-team.github.io/zh-Hans/docs/valen/choosing/)。
+应用中使用 `import { Valen } from '@valen-team/sdk'`。包名是 `@valen-team/sdk`；此前计划的 `@valen/sdk` 未发布到 npm，不应继续使用。推理源码和依赖版本未变。HTTP 客户端无需模型下载；本地 ONNX 推理还需下方列出的可选运行时依赖。
+
+[GitHub npm-v0.2.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.2.0)保留对应源码与发布记录。首次体验也可以使用[网页或免费 API](https://valen-team.github.io/)。
 
 ## Node.js 快速开始
 
@@ -58,7 +54,7 @@ Explicitness score (0–2): 1.921
 在自己的项目中安装：
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git#npm-v0.2.0
+npm install @valen-team/sdk@0.2.0
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
@@ -119,7 +115,7 @@ node examples/media.mjs momos.mp4 --video
 已有 Valen HTTP 服务时，只安装 SDK 即可使用，模型在服务端运行：
 
 ```bash
-npm install https://github.com/valen-team/valen-sdk-js.git#npm-v0.2.0
+npm install @valen-team/sdk@0.2.0
 ```
 
 ```js

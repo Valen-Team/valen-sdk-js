@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "name": "@valen-team/sdk",
+  "version": "0.2.0",
+  "latest": "0.2.0",
+  "url": "https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0",
+  "dist": {
+    "shasum": "a61a4e8890a306890e4b3b28c379444ee7f7505b",
+    "tarball": "https://registry.npmjs.org/@valen-team/sdk/-/sdk-0.2.0.tgz",
+    "fileCount": 26,
+    "integrity": "sha512-71B3KRHRbscKIe1zUHoUntjN6E8rF8pEqD5FKykLpZuIZk5rKm8tcUr7h4n7JdgxzavltXkneY6jGbD/0XPIcw==",
+    "signatures": [
+      {
+        "sig": "MEUCIQDh7EJsBkVb2Jx9yiFqIIpLw2OOLM9+MqBXCROJN/OMxAIgMQqLo48bxMpB+UlwFSkFnDvkVxNHIAtr2qglnW1H3Og=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEYCIQCw5pCIYlbZSRi4IXDIBqviO8V/M/Qoui8eJvAUhpovNgIhAIr3nUy6la6cAqTo1RXO9ejo/PXB9/rQLEkt9VpueF/v",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 1184594
+  },
+  "bytes": 809899,
+  "sha256": "4f4b52b2dbe75390c591d23c7127800f0bc5013e59758ba32b244efa84692f48",
+  "matches_reviewed_tarball": true,
+  "gitHead": null,
+  "client_model_or_dependency_downloads": 0
+}
