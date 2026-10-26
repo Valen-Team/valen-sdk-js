@@ -148,3 +148,5 @@ One local client executes requests serially. For CUDA, use a [Python service](ht
 [Python SDK](https://github.com/valen-team/valen-sdk-python) · [C++ text integration](https://github.com/valen-team/valen-sdk-cpp) · [Free API documentation](https://valen-team.github.io/docs/valen/api/)
 
 Apache-2.0. See [LICENSE](LICENSE), [third-party notices](THIRD_PARTY_NOTICES.md) and the [Pillow license](PILLOW-LICENSE.txt).
+
+User guides are maintained only on the website: [Documentation](https://valen-team.github.io/docs/) · [Fine-tuning](https://valen-team.github.io/docs/valen/training/) · [Probabilities](https://valen-team.github.io/docs/valen/probabilities/) · [Cookbook](https://valen-team.github.io/cookbook/).
