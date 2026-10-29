@@ -145,7 +145,7 @@ try {
 
 ## 更多
 
-[Python SDK](https://github.com/valen-team/valen-sdk-python) · [C++ 文本集成](https://github.com/valen-team/valen-sdk-cpp) · [免费 API 文档](https://valen-team.github.io/docs/valen/api/)
+[Python SDK](https://github.com/valen-team/valen-sdk-python) · [C++ 文本集成](https://github.com/valen-team/valen-sdk-cpp) · [免费 API 文档](https://valen-team.github.io/docs/valen/api/) · [Agent skill](https://github.com/Valen-Team/skills) · [llms.txt](https://valen-team.github.io/zh-Hans/llms.txt)
 
 Apache-2.0。见 [LICENSE](LICENSE)、[第三方许可](THIRD_PARTY_NOTICES.md) 和 [Pillow 许可](PILLOW-LICENSE.txt)。
 
