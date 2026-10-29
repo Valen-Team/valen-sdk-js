@@ -6,4 +6,16 @@ The authorized npm account must have publishing rights in the `valen-team` organ
 
 After publication query `https://registry.npmjs.org/@valen-team%2fsdk/0.2.0`; verify the exact name/version, integrity, file size and dist-tag. Update the bilingual README and website only after the registry confirms publication. The published tarball is immutable; GitHub artifact hashes are recorded separately. The earlier GitHub release used a different scope and is not evidence of npm publication.
 
-For future automated releases, configure npm Trusted Publishing on the existing package and an appropriate GitHub Actions workflow. npm registration alone does not authorize a GitHub workflow. Python `valen-sdk` is already published on PyPI and is independent of this npm scope migration.
+## Later releases
+
+Releases publish from GitHub Actions through [`.github/workflows/publish.yml`](.github/workflows/publish.yml) with npm Trusted Publishing, so no npm token or browser 2FA is needed.
+
+One-time setup: on npmjs.com, open `@valen-team/sdk` → Settings → Trusted Publisher, choose GitHub Actions and enter organization `Valen-Team`, repository `valen-sdk-js`, workflow `publish.yml` and environment `npm`. Create the `npm` environment under the repository's Settings → Environments.
+
+For each release:
+
+1. Set the version in `package.json`, `package-lock.json` (two root entries) and `VERSION` in `src/index.js`; `npm test` checks that `VERSION` matches `package.json`.
+2. Add the release to `CHANGELOG.md` and update the install commands in both READMEs.
+3. Commit, then tag and push `npm-vX.Y.Z`. The workflow runs the tests and type checks and publishes with provenance.
+
+Python `valen-sdk` publishes separately on PyPI.

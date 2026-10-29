@@ -31,7 +31,7 @@ Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0):
 npm install @valen-team/sdk@0.2.0
 ```
 
-Import with `import { Valen } from '@valen-team/sdk'`. The package name is `@valen-team/sdk`; the earlier planned `@valen/sdk` was never published on npm and should no longer be used. Inference source and dependency versions are unchanged. HTTP clients need no model download; local ONNX inference additionally requires the optional runtime dependencies listed below.
+Import with `import { Valen } from '@valen-team/sdk'`, or `require('@valen-team/sdk')` from CommonJS. The package name is `@valen-team/sdk`; the earlier planned `@valen/sdk` was never published on npm and should no longer be used. Inference source and dependency versions are unchanged. HTTP clients need no model download; local ONNX inference additionally requires the optional runtime dependencies listed below.
 
 [GitHub npm-v0.2.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.2.0) records the corresponding source and publication evidence. For a first try, you can also use the [web experience or free API](https://valen-team.github.io/).
 
@@ -126,6 +126,8 @@ try {
 ```
 
 This example calls `http://127.0.0.1:8000/v1`. Start a local service with the [Python SDK](https://github.com/valen-team/valen-sdk-python#local-http-service). Pass `apiKey` in the `Valen.remote` options when the server uses authentication.
+
+`timeout` (milliseconds, default 120000) and `maxRetries` (default 2) apply to every request; 429, 502, 503, 504 and connection failures are retried with backoff. Pass `{ signal, timeout }` as request options to cancel one request or give it its own timeout, for example `client.systemOne(state, questions, { signal: AbortSignal.timeout(5000) })`. Service and network failures throw `ValenAPIError` with `statusCode`, `requestId` and the underlying `cause`; a cancelled request rejects with the signal's reason, such as `AbortError` or `TimeoutError`. Passing `signal` requires `AbortSignal.any` (Node 20.3+, Chrome 116+, Safari 17.4+, Firefox 124+).
 
 ## SystemOne and options
 

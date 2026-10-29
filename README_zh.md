@@ -31,7 +31,7 @@
 npm install @valen-team/sdk@0.2.0
 ```
 
-应用中使用 `import { Valen } from '@valen-team/sdk'`。包名是 `@valen-team/sdk`；此前计划的 `@valen/sdk` 未发布到 npm，不应继续使用。推理源码和依赖版本未变。HTTP 客户端无需模型下载；本地 ONNX 推理还需下方列出的可选运行时依赖。
+应用中使用 `import { Valen } from '@valen-team/sdk'`；CommonJS 中可用 `require('@valen-team/sdk')`。包名是 `@valen-team/sdk`；此前计划的 `@valen/sdk` 未发布到 npm，不应继续使用。推理源码和依赖版本未变。HTTP 客户端无需模型下载；本地 ONNX 推理还需下方列出的可选运行时依赖。
 
 [GitHub npm-v0.2.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.2.0)保留对应源码与发布记录。首次体验也可以使用[网页或免费 API](https://valen-team.github.io/)。
 
@@ -126,6 +126,8 @@ try {
 ```
 
 该例调用 `http://127.0.0.1:8000/v1`；可用 [Python SDK](https://github.com/valen-team/valen-sdk-python#local-http-service) 启动本地服务。服务启用鉴权时，在 `Valen.remote` 选项中传入 `apiKey`。
+
+`timeout`（毫秒，默认 120000）和 `maxRetries`（默认 2）作用于每个请求；429、502、503、504 和连接失败会退避重试。在请求选项中传入 `{ signal, timeout }` 可取消单个请求或单独设置超时，例如 `client.systemOne(state, questions, { signal: AbortSignal.timeout(5000) })`。服务和网络失败抛出 `ValenAPIError`，带有 `statusCode`、`requestId` 和底层的 `cause`；被取消的请求以 signal 的原因拒绝，例如 `AbortError` 或 `TimeoutError`。传入 `signal` 需要 `AbortSignal.any`（Node 20.3+、Chrome 116+、Safari 17.4+、Firefox 124+）。
 
 ## SystemOne 与参数
 

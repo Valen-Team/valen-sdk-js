@@ -1,7 +1,9 @@
 /** Decision interfaces over the Valen HTTP API. */
+export const VERSION = '0.2.1';
+
 export class ValenAPIError extends Error {
-  constructor(message, statusCode, requestId) {
-    super(message);
+  constructor(message, statusCode, requestId, options) {
+    super(message, options);
     this.name = 'ValenAPIError';
     this.statusCode = statusCode;
     this.requestId = requestId;
@@ -27,13 +29,15 @@ export class Valen {
     const body = request.request ?? request;
     if (!body || typeof body !== 'object' || Array.isArray(body))
       throw new Error('Request must be an object');
-    return this.backend.predict({ ...body, ...options }, 'input' in body ? 'decisions' : 'system_one');
+    // signal and timeout control the call; every other option is a request field.
+    const { signal, timeout, ...fields } = { ...body, ...options };
+    return this.backend.predict(fields, 'input' in body ? 'decisions' : 'system_one', { signal, timeout });
   }
   async decisions(request) {
     return this.predict(request);
   }
   async systemOne(state, questions, options = {}) {
-    return this.predict({ state, questions, ...options });
+    return this.predict({ state, questions }, options);
   }
   async system_one(state, questions, options = {}) {
     return this.systemOne(state, questions, options);
@@ -53,7 +57,7 @@ class HTTPBackend {
     this.baseUrl = baseUrl.replace(/\/$/, '');
     this.options = { apiKey, model, timeout, maxRetries, fetch_ };
   }
-  async predict(body, protocol) {
+  async predict(body, protocol, { signal, timeout: requestTimeout } = {}) {
     const { apiKey, model, timeout, maxRetries, fetch_ } = this.options;
     const payload = JSON.stringify({ ...(model ? { model } : {}), ...body }, (_key, value) => {
       if (value instanceof Map)
@@ -69,12 +73,17 @@ class HTTPBackend {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            // Browsers set their own User-Agent.
+            ...(globalThis.process?.versions?.node ? { 'User-Agent': `valen-sdk-js/${VERSION}` } : {}),
             ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
           },
           body: payload,
-          signal: AbortSignal.timeout(timeout),
+          signal: signal
+            ? AbortSignal.any([AbortSignal.timeout(requestTimeout ?? timeout), signal])
+            : AbortSignal.timeout(requestTimeout ?? timeout),
         });
       } catch (error) {
+        if (signal?.aborted) throw signal.reason;
         if (attempt >= maxRetries)
           throw new ValenAPIError('Unable to reach Valen service', undefined, undefined, { cause: error });
         await new Promise((resolve) => setTimeout(resolve, Math.min(250 * 2 ** attempt, 2000)));
@@ -85,12 +94,24 @@ class HTTPBackend {
         await new Promise((resolve) => setTimeout(resolve, Math.min(250 * 2 ** attempt, 2000)));
         continue;
       }
-      const result = await response.json();
+      const text = await response.text();
+      const requestId = response.headers.get('x-request-id');
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        throw new ValenAPIError(
+          `Valen returned HTTP ${response.status} without JSON: ${text.slice(0, 200)}`,
+          response.status,
+          requestId,
+          { cause: error }
+        );
+      }
       if (!response.ok)
         throw new ValenAPIError(
           JSON.stringify(result.error ?? result.detail ?? 'Valen request failed'),
           response.status,
-          response.headers.get('x-request-id')
+          requestId
         );
       return result;
     }

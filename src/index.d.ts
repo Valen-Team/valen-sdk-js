@@ -56,19 +56,30 @@ export type SystemOneQuestion =
   | { type: 'noul'; instructions: string }
   | { type: 'choice'; instructions: string; criteria: Record<string, string> | Map<string, string> }
   | { type: 'score'; instructions: string; criteria: string[] };
+export interface NoulAnswer {
+  type: 'noul';
+  noul: number;
+}
+export interface SystemOneChoiceAnswer {
+  type: 'choice';
+  choice: string;
+  confidence: number;
+  probabilities: Record<string, number>;
+}
+export interface SystemOneScoreAnswer {
+  type: 'score';
+  score: number;
+  confidence: number;
+  /** Level index to criterion text. */
+  legend: Record<string, string>;
+  probabilities: Record<string, number>;
+}
+export type SystemOneAnswer = NoulAnswer | SystemOneChoiceAnswer | SystemOneScoreAnswer;
 export interface SystemOneResponse {
   model: string;
-  answers: Record<
-    string,
-    {
-      type: 'noul' | 'choice' | 'score';
-      noul?: number;
-      choice?: string;
-      score?: number;
-      confidence?: number;
-      probabilities?: Record<string, number>;
-    }
-  >;
+  model_id?: string;
+  revision?: string;
+  answers: Record<string, SystemOneAnswer>;
   usage: Usage;
   internal_usage?: { compute_tokens: number };
 }
@@ -76,6 +87,10 @@ export interface RequestOptions {
   model?: string;
   temperature?: number;
   execution?: 'shared_state' | 'question';
+  /** Cancels an HTTP request; local inference ignores it. */
+  signal?: AbortSignal;
+  /** Milliseconds for each HTTP attempt, overriding the client's timeout. */
+  timeout?: number;
 }
 export interface RemoteOptions {
   apiKey?: string;
@@ -98,12 +113,19 @@ export class Valen {
     questions: Record<string, SystemOneQuestion> | Map<string, SystemOneQuestion>,
     options?: RequestOptions
   ): Promise<SystemOneResponse>;
+  predict(request: { input: Input; questions: Question[] }, options?: RequestOptions): Promise<DecisionResponse>;
+  predict(
+    request: { state: string | Record<string, unknown>; questions: Record<string, SystemOneQuestion> },
+    options?: RequestOptions
+  ): Promise<SystemOneResponse>;
   predict(request: Record<string, unknown>, options?: RequestOptions): Promise<Record<string, unknown>>;
   close(): Promise<void>;
 }
+export const VERSION: string;
 export class ValenAPIError extends Error {
+  constructor(message: string, statusCode?: number, requestId?: string | null, options?: { cause?: unknown });
   statusCode?: number;
-  requestId?: string;
+  requestId?: string | null;
 }
 export function choice(
   instructions: string,

@@ -1,6 +1,6 @@
 {
   "name": "@valen-team/sdk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Valen decision SDK for HTTP and local ONNX inference",
   "type": "module",
   "main": "./src/index.js",
@@ -8,7 +8,7 @@
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
-      "import": "./src/index.js"
+      "default": "./src/index.js"
     }
   },
   "files": [
@@ -25,10 +25,10 @@
   ],
   "scripts": {
     "test": "node --test",
-    "typecheck": "tsc --noEmit --allowJs --checkJs false --module nodenext --target es2022 src/index.d.ts --types node"
+    "typecheck": "tsc --noEmit --allowJs --checkJs false --module nodenext --target es2022 src/index.d.ts test-d/types.ts --types node"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12"
   },
   "license": "Apache-2.0",
   "devDependencies": {
