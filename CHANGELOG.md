@@ -3,7 +3,8 @@
 ## 0.2.1 — unreleased
 
 - HTTP error responses throw `ValenAPIError`: a non-JSON error page (such as a gateway's HTML 502) keeps its status code, request ID and text, and network failures keep their `cause`.
-- Requests take `signal` and `timeout` options to cancel one request or set its own timeout; a cancelled request rejects with the signal's reason and is not retried. Passing `signal` uses `AbortSignal.any`; requests without one work as before.
+- A self-hosted server's `{"error": {"message": ...}}` becomes the error message, and the hosted APIs' `x-llm-proxy-request-id` fills `requestId`.
+- Requests take `signal` and `timeout` options to cancel one request or set its own timeout; a cancelled request rejects with the signal's reason at once, including during the wait between retries, and is not retried. Passing `signal` uses `AbortSignal.any`; requests without one work as before.
 - Node sends `User-Agent: valen-sdk-js/<version>`; `VERSION` is exported.
 - CommonJS can `require('@valen-team/sdk')`. Node.js 22.12+ is required.
 - System One answers are typed by `type` (`NoulAnswer`, `SystemOneChoiceAnswer`, `SystemOneScoreAnswer`, with `legend` on scores), and `predict` returns `DecisionResponse` or `SystemOneResponse` for those request shapes.

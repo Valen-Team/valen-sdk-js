@@ -48,6 +48,14 @@ export class Valen {
   }
 }
 
+// Resolves after ms, or rejects at once with the reason when the caller's signal aborts.
+const wait = (ms, signal) =>
+  new Promise((resolve, reject) => {
+    if (signal?.aborted) return reject(signal.reason);
+    const timer = setTimeout(resolve, ms);
+    signal?.addEventListener('abort', () => (clearTimeout(timer), reject(signal.reason)), { once: true });
+  });
+
 class HTTPBackend {
   constructor(
     baseUrl,
@@ -86,16 +94,17 @@ class HTTPBackend {
         if (signal?.aborted) throw signal.reason;
         if (attempt >= maxRetries)
           throw new ValenAPIError('Unable to reach Valen service', undefined, undefined, { cause: error });
-        await new Promise((resolve) => setTimeout(resolve, Math.min(250 * 2 ** attempt, 2000)));
+        await wait(Math.min(250 * 2 ** attempt, 2000), signal);
         continue;
       }
       if ([429, 502, 503, 504].includes(response.status) && attempt < maxRetries) {
         await response.body?.cancel();
-        await new Promise((resolve) => setTimeout(resolve, Math.min(250 * 2 ** attempt, 2000)));
+        await wait(Math.min(250 * 2 ** attempt, 2000), signal);
         continue;
       }
       const text = await response.text();
-      const requestId = response.headers.get('x-request-id');
+      // Self-hosted servers send x-request-id; the hosted APIs send x-llm-proxy-request-id.
+      const requestId = response.headers.get('x-request-id') ?? response.headers.get('x-llm-proxy-request-id');
       let result;
       try {
         result = JSON.parse(text);
@@ -107,9 +116,10 @@ class HTTPBackend {
           { cause: error }
         );
       }
+      const detail = result.error ?? result.detail ?? 'Valen request failed';
       if (!response.ok)
         throw new ValenAPIError(
-          JSON.stringify(result.error ?? result.detail ?? 'Valen request failed'),
+          typeof detail === 'string' ? detail : (detail.message ?? JSON.stringify(detail)),
           response.status,
           requestId
         );

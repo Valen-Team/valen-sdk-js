@@ -78,3 +78,17 @@ test("requests without a signal do not need AbortSignal.any", async () => {
     AbortSignal.any = any;
   }
 });
+
+test("nested error messages, hosted request IDs and cancelling during a retry wait", async () => {
+  const nested = Valen.remote("https://example.test/v1", { fetch: async () => new Response(
+    JSON.stringify({ error: { type: "invalid_request", message: "At most 8 questions" } }),
+    { status: 400, headers: { "x-llm-proxy-request-id": "proxy-1" } }) });
+  await assert.rejects(nested.systemOne("red", {}), error => error.message === "At most 8 questions" && error.requestId === "proxy-1");
+  const busy = Valen.remote("https://example.test/v1", { maxRetries: 2, fetch: async () => new Response("{}", { status: 503 }) });
+  const controller = new AbortController();
+  const started = Date.now();
+  const pending = busy.systemOne("red", {}, { signal: controller.signal });
+  setTimeout(() => controller.abort(), 50);
+  await assert.rejects(pending, { name: "AbortError" });
+  assert.ok(Date.now() - started < 200);
+});
