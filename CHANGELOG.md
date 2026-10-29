@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.1 — unreleased
+## 0.2.1 — 2026-10-30
 
 - HTTP error responses throw `ValenAPIError`: a non-JSON error page (such as a gateway's HTML 502) keeps its status code, request ID and text, and network failures keep their `cause`.
 - A self-hosted server's `{"error": {"message": ...}}` becomes the error message, and the hosted APIs' `x-llm-proxy-request-id` fills `requestId`.
