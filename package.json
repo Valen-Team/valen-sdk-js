@@ -71,9 +71,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/valen-team/valen-sdk-js.git"
+    "url": "git+https://github.com/Valen-Team/valen-sdk-js.git"
   },
-  "homepage": "https://github.com/valen-team/valen-sdk-js#readme",
+  "homepage": "https://github.com/Valen-Team/valen-sdk-js#readme",
   "publishConfig": {
     "access": "public"
   }
