@@ -23,24 +23,24 @@ Add Valen decisions to a Node.js service or browser application. Turn text, imag
 Complete workflows are maintained in the [official Cookbook](https://valen-team.github.io/cookbook/): [ticket routing](https://valen-team.github.io/cookbook/ticket-routing/), [when no option fits](https://valen-team.github.io/cookbook/unknown-categories/), [product-image screening](https://valen-team.github.io/cookbook/product-screening/) and [video tagging](https://valen-team.github.io/cookbook/video-tagging/). Code, samples and measured outputs share one source. This repository retains SDK interface and installation examples. `Valen.local` loads ONNX; connect to GGUF services over HTTP. C++ support remains scoped by this repository's reference.
 
 
-## Stable version 0.2.0
+## Stable version 0.2.1
 
-Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.0):
+Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.2.1):
 
 ```sh
-npm install @valen-team/sdk@0.2.0
+npm install @valen-team/sdk@0.2.1
 ```
 
 Import with `import { Valen } from '@valen-team/sdk'`, or `require('@valen-team/sdk')` from CommonJS. The package name is `@valen-team/sdk`; the earlier planned `@valen/sdk` was never published on npm and should no longer be used. Inference source and dependency versions are unchanged. HTTP clients need no model download; local ONNX inference additionally requires the optional runtime dependencies listed below.
 
-[GitHub npm-v0.2.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.2.0) records the corresponding source and publication evidence. For a first try, you can also use the [web experience or free API](https://valen-team.github.io/).
+[GitHub npm-v0.2.1](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.2.1) records the corresponding source and publication evidence. For a first try, you can also use the [web experience or free API](https://valen-team.github.io/).
 
 ## Node.js quick start
 
 Use Node.js 22.12+ or 24 and Git. This example runs on CPU:
 
 ```bash
-git clone --branch npm-v0.2.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
+git clone --branch npm-v0.2.1 --depth 1 https://github.com/valen-team/valen-sdk-js.git
 cd valen-sdk-js
 npm ci --ignore-scripts
 node examples/local.mjs
@@ -59,7 +59,7 @@ Explicitness score (0–2): 1.921
 To install in your own application:
 
 ```bash
-npm install @valen-team/sdk@0.2.0
+npm install @valen-team/sdk@0.2.1
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
@@ -106,7 +106,7 @@ Minimal local media interface examples remain in `examples/`. Complete inputs, d
 For an existing Valen service, install only the SDK; inference runs on the server:
 
 ```bash
-npm install @valen-team/sdk@0.2.0
+npm install @valen-team/sdk@0.2.1
 ```
 
 ```js
