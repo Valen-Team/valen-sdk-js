@@ -30,9 +30,9 @@ test("retryable service failure recovers", async () => {
   let calls = 0;
   const client = Valen.remote("https://example.test/v1", { fetch: async () => {
     if (++calls === 1) return new Response("{}", { status: 503 });
-    return new Response(JSON.stringify({ answers: [] }));
+    return new Response(JSON.stringify({ model: 'test', answers: [], usage: { input_tokens: null, output_tokens: null } }));
   }});
-  assert.deepEqual(await client.decisions({ input: "red", questions: [] }), { answers: [] });
+  assert.deepEqual(await client.decisions({ input: "red", questions: [] }), { model: 'test', answers: [], usage: { input_tokens: null, output_tokens: null } });
   assert.equal(calls, 2);
 });
 
@@ -50,7 +50,7 @@ test("per-request signal and timeout stay out of the body, and an abort is not r
   const client = Valen.remote("https://example.test/v1", { fetch: async (url, options) => {
     requests.push(options);
     if (options.signal.aborted) throw options.signal.reason;
-    return new Response(JSON.stringify({ answers: {} }));
+    return new Response(JSON.stringify({ model: 'test', answers: {}, usage: {} }));
   }});
   await client.systemOne("red", {}, { timeout: 5000, temperature: .5 });
   assert.deepEqual(JSON.parse(requests[0].body), { state: "red", questions: {}, temperature: .5 });
@@ -72,7 +72,7 @@ test("requests without a signal do not need AbortSignal.any", async () => {
   const any = AbortSignal.any;
   AbortSignal.any = undefined;
   try {
-    const client = Valen.remote("https://example.test/v1", { fetch: async () => new Response(JSON.stringify({ answers: {} })) });
+    const client = Valen.remote("https://example.test/v1", { fetch: async () => new Response(JSON.stringify({ model: 'test', answers: {}, usage: {} })) });
     assert.deepEqual((await client.systemOne("red", {})).answers, {});
   } finally {
     AbortSignal.any = any;

@@ -152,3 +152,28 @@ One local client executes requests serially. For CUDA, use a [Python service](ht
 Apache-2.0. See [LICENSE](LICENSE), [third-party notices](THIRD_PARTY_NOTICES.md) and the [Pillow license](PILLOW-LICENSE.txt).
 
 User guides are maintained only on the website: [Documentation](https://valen-team.github.io/docs/) · [Fine-tuning](https://valen-team.github.io/docs/valen/training/) · [Probabilities](https://valen-team.github.io/docs/valen/probabilities/) · [Cookbook](https://valen-team.github.io/cookbook/).
+
+## Typed answers and request budgets
+
+`systemOne` / `system_one` infer question names, answer kinds and Choice candidate values. `decisions` infers answer kinds and candidate values for question tuples. Dynamically assembled questions and raw `predict` remain supported.
+
+```ts
+import { Valen, choice, predicate } from '@valen-team/sdk';
+const client = Valen.remote('https://api.valen-team.workers.dev/v1', {
+  timeout: 10_000,
+  totalTimeout: 25_000,
+  onEvent: event => console.log(event),
+});
+const result = await client.systemOne('Please refund my order.', {
+  intent: choice('What does the customer request?', { refund: 'Refund', delivery: 'Delivery status' }),
+  urgent: predicate('The customer needs urgent help.'),
+});
+// result.answers.intent.choice is typed as 'refund' | 'delivery'.
+await client.close();
+```
+
+Durations are milliseconds. A per-call `signal` cancels network requests and retry waits. Typed methods reject missing/duplicate answers, invalid distributions and unknown candidates using `ValenResponseError`; raw `predict` retains backend JSON. Events contain metadata, never input bodies. Local `onEvent` reports loading stages, `info` reports runtime configuration, and `warmup(request)` runs a representative request.
+
+See the [behavior contract](contracts/README.md), [runnable reliability example](examples/reliability.mjs) and [upgrade notes](CHANGELOG.md). `npm run test:package` tests the actual tarball in an isolated installation, including a browser-global module check.
+
+Browser video decoding additionally requires `npm install mediabunny@1.62.1`; HTTP-only use installs no runtime dependencies. The included browser example declares this dependency explicitly.

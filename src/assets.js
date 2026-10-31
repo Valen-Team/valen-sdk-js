@@ -1,3 +1,4 @@
+import { emit } from './events.js';
 /** Asset loading with Node streaming downloads and the browser Cache API. */
 const isNode = typeof process !== 'undefined' && Boolean(process.versions?.node);
 
@@ -89,6 +90,7 @@ export class Assets {
       return path;
     }
     if (this.local || this.options.localFilesOnly) throw new Error(`Missing local asset: ${name}`);
+    emit(this.options.onEvent, { event: 'download_start', backend: 'local', asset: name });
     const response = await fetch(this.url(name), {
       signal: AbortSignal.timeout(this.options.downloadTimeout ?? 600000),
       headers: this.options.token ? { Authorization: `Bearer ${this.options.token}` } : {},
@@ -102,6 +104,7 @@ export class Assets {
       await pipeline(response.body, createWriteStream(temporary));
       await this.verifyFile(temporary, name);
       await this.fs.rename(temporary, path);
+      emit(this.options.onEvent, { event: 'download_complete', backend: 'local', asset: name });
       if (this.verified?.has(name)) this.verified.set(name, path);
     } catch (error) {
       await this.fs.rm(temporary, { force: true });
@@ -117,6 +120,7 @@ export class Assets {
     const cached = await cache?.match(url);
     if (cached) return this.verifyResponse(cached, name);
     if (this.options.localFilesOnly) throw new Error(`Missing cached asset: ${name}`);
+    emit(this.options.onEvent, { event: 'download_start', backend: 'local', asset: name });
     const downloaded = await fetch(url, {
       signal: AbortSignal.timeout(this.options.downloadTimeout ?? 600000),
       headers: this.options.token ? { Authorization: `Bearer ${this.options.token}` } : {},

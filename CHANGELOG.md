@@ -1,3 +1,14 @@
+# Unreleased
+
+- Browser video decoding now uses the optional `mediabunny` peer (`npm install mediabunny@1.62.1`). HTTP-only installs have no runtime dependencies and avoid unrelated WebCodecs global type conflicts.
+
+- Validate typed answers against request names, kinds, candidates and finite probability distributions. Raw `predict` remains available. Malformed responses previously accepted now fail explicitly.
+- Add total request budgets, Retry-After with jitter, stable timeout/response errors and metadata-only event hooks.
+- Add local loading stages, runtime information and representative-request warmup; document concurrency and ownership.
+- Add versioned cross-language protocol/formula fixtures and installed-package smoke tests.
+- Infer SystemOne question names, answer kinds and Choice literals; infer Decisions tuple answer kinds and candidate values.
+- Remove abort listeners after retry waits, preserve cancellation reasons and make public close idempotent.
+
 # Changelog
 
 ## 0.2.1 — 2026-10-30

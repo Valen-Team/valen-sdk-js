@@ -152,3 +152,11 @@ try {
 Apache-2.0。见 [LICENSE](LICENSE)、[第三方许可](THIRD_PARTY_NOTICES.md) 和 [Pillow 许可](PILLOW-LICENSE.txt)。
 
 用户指南唯一维护在官网：[Documentation](https://valen-team.github.io/zh-Hans/docs/) · [Fine-tuning](https://valen-team.github.io/zh-Hans/docs/valen/training/) · [Probabilities](https://valen-team.github.io/zh-Hans/docs/valen/probabilities/) · [Cookbook](https://valen-team.github.io/zh-Hans/cookbook/).
+
+## 类型推导与调用预算
+
+`systemOne` / `system_one` 根据问题推导问题名、答案类型和 Choice 候选值；`decisions` 支持问题元组的答案类型推导。类型化调用会拒绝漏答、重复答案和非法概率，原始 `predict` 保留宽松接口。
+
+`timeout` 是每次尝试的毫秒数，`totalTimeout` 包含重试等待；`signal` 取消网络请求和等待。`onEvent` 仅提供请求或本地加载元数据。用本地 `info` 查看配置，`warmup(request)` 加载实际请求需要的模型图。[行为契约](contracts/README.md) · [可运行示例](examples/reliability.mjs)。
+
+浏览器视频解码需额外安装 `npm install mediabunny@1.62.1`；仅 HTTP 调用无运行时依赖。浏览器示例已显式声明此依赖。

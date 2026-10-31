@@ -21,11 +21,13 @@
     "examples",
     "assets/branding",
     "CHANGELOG.md",
-    "RELEASING.md"
+    "RELEASING.md",
+    "contracts"
   ],
   "scripts": {
     "test": "node --test",
-    "typecheck": "tsc --noEmit --allowJs --checkJs false --module nodenext --target es2022 src/index.d.ts test-d/types.ts --types node"
+    "typecheck": "tsc --noEmit --allowJs --checkJs false --module nodenext --target es2022 src/index.d.ts test-d/types.ts --types node",
+    "test:package": "node --experimental-vm-modules scripts/package-smoke.mjs"
   },
   "engines": {
     "node": ">=22.12"
@@ -40,14 +42,16 @@
     "onnxruntime-node": "1.30.0",
     "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0",
     "typescript": "^5.9.0",
-    "@types/node": "26.6.5"
+    "@types/node": "26.6.5",
+    "mediabunny": "1.62.1"
   },
   "peerDependencies": {
     "@huggingface/jinja": "0.5.10",
     "@huggingface/tokenizers": "0.2.0",
     "@huggingface/transformers": "4.3.1",
     "onnxruntime-node": "1.30.0",
-    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0"
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0",
+    "mediabunny": "1.62.1"
   },
   "peerDependenciesMeta": {
     "@huggingface/transformers": {
@@ -64,10 +68,10 @@
     },
     "onnxruntime-web": {
       "optional": true
+    },
+    "mediabunny": {
+      "optional": true
     }
-  },
-  "dependencies": {
-    "mediabunny": "1.62.1"
   },
   "repository": {
     "type": "git",

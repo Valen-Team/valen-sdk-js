@@ -3,7 +3,7 @@ export interface ChoiceQuestion {
   name?: string;
   type: 'choice';
   instructions: string;
-  choices: { value: ChoiceValue; description: string }[];
+  choices: readonly { readonly value: ChoiceValue; readonly description: string }[];
 }
 export interface PredicateQuestion {
   name?: string;
@@ -14,7 +14,7 @@ export interface ScoreQuestion {
   name?: string;
   type: 'score';
   instructions: string;
-  levels: { label: string; description: string }[];
+  levels: readonly { readonly label: string; readonly description: string }[];
 }
 export type Question = ChoiceQuestion | PredicateQuestion | ScoreQuestion;
 export type ContentPart =
@@ -23,8 +23,8 @@ export type ContentPart =
   | { type: 'input_video'; video_url: string };
 export type Input = string | { role: 'user' | 'assistant' | 'system'; content: string | ContentPart[] }[];
 export interface Usage {
-  input_tokens: number;
-  output_tokens: number;
+  input_tokens: number | null;
+  output_tokens: number | null;
   [key: string]: unknown;
 }
 export interface ChoiceAnswer {
@@ -91,51 +91,63 @@ export interface RequestOptions {
   signal?: AbortSignal;
   /** Milliseconds for each HTTP attempt, overriding the client's timeout. */
   timeout?: number;
+  /** Total wall-clock budget, including retries, in milliseconds (HTTP only). */
+  totalTimeout?: number;
 }
 export interface RemoteOptions {
   apiKey?: string;
   model?: string;
   timeout?: number;
+  /** Total wall-clock budget, including retries, in milliseconds (HTTP only). */
+  totalTimeout?: number;
   maxRetries?: number;
   fetch?: typeof globalThis.fetch;
+  onEvent?: (event: RequestEvent) => void;
 }
 export class Valen {
   static local(model: string, options?: LocalOptions): Promise<Valen>;
   static remote(baseUrl: string, options?: RemoteOptions): Valen;
-  decisions(request: { input: Input; questions: Question[] } & RequestOptions): Promise<DecisionResponse>;
-  systemOne(
+  decisions<const Q extends readonly Question[]>(request: { input: Input; questions: Q } & RequestOptions): Promise<TypedDecisionResponse<Q>>;
+  systemOne<const Q extends Record<string, SystemOneQuestion>>(
     state: string | Record<string, unknown>,
-    questions: Record<string, SystemOneQuestion> | Map<string, SystemOneQuestion>,
+    questions: Q,
     options?: RequestOptions
-  ): Promise<SystemOneResponse>;
-  system_one(
+  ): Promise<TypedSystemOneResponse<Q>>;
+  systemOne(state: string | Record<string, unknown>, questions: Map<string, SystemOneQuestion>, options?: RequestOptions): Promise<SystemOneResponse>;
+  system_one<const Q extends Record<string, SystemOneQuestion>>(
     state: string | Record<string, unknown>,
-    questions: Record<string, SystemOneQuestion> | Map<string, SystemOneQuestion>,
+    questions: Q,
     options?: RequestOptions
-  ): Promise<SystemOneResponse>;
+  ): Promise<TypedSystemOneResponse<Q>>;
+  system_one(state: string | Record<string, unknown>, questions: Map<string, SystemOneQuestion>, options?: RequestOptions): Promise<SystemOneResponse>;
   predict(request: { input: Input; questions: Question[] }, options?: RequestOptions): Promise<DecisionResponse>;
   predict(
     request: { state: string | Record<string, unknown>; questions: Record<string, SystemOneQuestion> },
     options?: RequestOptions
   ): Promise<SystemOneResponse>;
   predict(request: Record<string, unknown>, options?: RequestOptions): Promise<Record<string, unknown>>;
+  warmup(request: Record<string, unknown>): Promise<Record<string, unknown>>;
+  readonly info: Record<string, unknown>;
   close(): Promise<void>;
 }
 export const VERSION: string;
 export class ValenAPIError extends Error {
-  constructor(message: string, statusCode?: number, requestId?: string | null, options?: { cause?: unknown });
+  constructor(message: string, statusCode?: number, requestId?: string | null, options?: { cause?: unknown; code?: string; model?: string; field?: string; retryable?: boolean });
+  code: string;
+  model?: string;
+  field?: string;
+  retryable: boolean;
   statusCode?: number;
   requestId?: string | null;
 }
-export function choice(
-  instructions: string,
-  criteria: Record<string, string> | Map<string, string>
-): SystemOneQuestion;
-export function predicate(instructions: string): SystemOneQuestion;
-export function score(instructions: string, criteria: string[]): SystemOneQuestion;
+export function choice<const C extends Record<string, string>>(instructions: string, criteria: C): { type: 'choice'; instructions: string; criteria: C };
+export function choice(instructions: string, criteria: Map<string, string>): Extract<SystemOneQuestion, { type: 'choice' }>;
+export function predicate(instructions: string): Extract<SystemOneQuestion, { type: 'noul' }>;
+export function score(instructions: string, criteria: string[]): Extract<SystemOneQuestion, { type: 'score' }>;
 
 export interface LocalOptions {
   device?: 'cpu' | 'wasm' | 'webgpu';
+  onEvent?: (event: RequestEvent) => void;
   variant?: string;
   revision?: string;
   cacheDir?: string;
@@ -153,4 +165,49 @@ export interface LocalOptions {
   maxVideoDecodeBytes?: number;
   verify?: boolean;
   downloadTimeout?: number;
+}
+
+export type AnswerFor<Q> = Q extends { type: 'noul' } ? NoulAnswer :
+  Q extends { type: 'score' } ? SystemOneScoreAnswer :
+  Q extends { type: 'choice'; criteria: infer C } ? Omit<SystemOneChoiceAnswer, 'choice' | 'probabilities'> & {
+    choice: C extends Map<string, string> ? string : Extract<keyof C, string>;
+    probabilities: Record<C extends Map<string, string> ? string : Extract<keyof C, string>, number>;
+  } : SystemOneAnswer;
+export type TypedSystemOneResponse<Q> = Omit<SystemOneResponse, 'answers'> & { answers: { [K in keyof Q]: AnswerFor<Q[K]> } };
+export interface RequestEvent {
+  event: 'start' | 'attempt' | 'retry' | 'complete' | 'error' | 'load_start' | 'load_complete' | 'graph_load_start' | 'graph_load_complete' | 'download_start' | 'download_complete';
+  backend?: string;
+  variant?: string;
+  graph?: string;
+  asset?: string;
+  model?: string;
+  attempt?: number;
+  attempts?: number;
+  elapsed?: number;
+  delay?: number;
+  code?: string;
+  statusCode?: number;
+  requestId?: string | null;
+  usage?: Usage;
+}
+export class ValenResponseError extends ValenAPIError {
+  constructor(message: string, options?: { statusCode?: number; requestId?: string; field?: string; model?: string; cause?: unknown });
+}
+export class ValenTimeoutError extends ValenAPIError { constructor(message?: string); }
+
+export type DecisionAnswerFor<Q> = Q extends { type: 'predicate' } ? PredicateAnswer :
+  Q extends { type: 'score' } ? ScoreAnswer : Q extends { type: 'choice'; choices: readonly (infer C)[] } ?
+  Omit<ChoiceAnswer, 'choice' | 'probabilities'> & {
+    choice: C extends { value: infer V extends ChoiceValue } ? V : ChoiceValue;
+    probabilities: { value: C extends { value: infer V extends ChoiceValue } ? V : ChoiceValue; probability: number }[];
+  } : ChoiceAnswer | PredicateAnswer | ScoreAnswer;
+export type TypedDecisionResponse<Q extends readonly Question[]> = Omit<DecisionResponse, 'answers'> & {
+  answers: { -readonly [I in keyof Q]: DecisionAnswerFor<Q[I]> };
+};
+
+export class ValenInputError extends TypeError {
+  constructor(message: string, field?: string);
+  code: 'invalid_input';
+  field?: string;
+  retryable: false;
 }

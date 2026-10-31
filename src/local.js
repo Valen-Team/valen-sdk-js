@@ -1,4 +1,5 @@
 /** Local inference reuses ONNX Runtime and Transformers.js image processing. */
+import { emit } from './events.js';
 import { smartResize, formatTimestamp } from './geometry.js';
 import { withConsistentResize } from './resizing.js';
 import { Assets, isNode } from './assets.js';
@@ -12,6 +13,8 @@ export class LocalBackend {
       throw new Error('Node local inference supports CPU; use WebGPU/WASM in a browser');
     if (options.numThreads !== undefined && (!Number.isInteger(options.numThreads) || options.numThreads < 1))
       throw new Error('numThreads must be a positive integer');
+    const started = performance.now();
+    emit(options.onEvent, { event: 'load_start', backend: 'local', variant: options.variant ?? 'fp32' });
     const backend = new LocalBackend();
     backend.assets = await Assets.create(model, options);
     backend.manifest = await backend.assets.json('valen_onnx.json');
@@ -38,7 +41,11 @@ export class LocalBackend {
     backend.compiler = new Compiler(tokenizer, tokenizerConfig, template, backend.config, (messages) =>
       backend.processMedia(messages)
     );
+    emit(options.onEvent, { event: 'load_complete', backend: 'local', model: backend.name, variant: options.variant ?? 'fp32', elapsed: performance.now()-started });
     return backend;
+  }
+  get info() {
+    return { backend: 'onnx', model: this.name, variant: this.options.variant ?? 'fp32', device: this.options.device ?? (isNode ? 'cpu' : 'wasm'), loadedGraphs: [...this.sessions.keys()], closed: this.closed };
   }
   tensor(type, values, shape) {
     if (!['float32', 'float16', 'int64'].includes(type))
@@ -55,6 +62,7 @@ export class LocalBackend {
   async session(name) {
     if (!this.sessions.has(name)) {
       const loading = (async () => {
+        emit(this.options.onEvent, { event: 'graph_load_start', backend: 'local', graph: name, model: this.name });
         const graph = this.variant.graphs[name];
         const components = this.variant.components[name];
         const options = {
@@ -77,7 +85,9 @@ export class LocalBackend {
               }))
           );
         }
-        return this.ort.InferenceSession.create(model, options);
+        const session = await this.ort.InferenceSession.create(model, options);
+        emit(this.options.onEvent, { event: 'graph_load_complete', backend: 'local', graph: name, model: this.name });
+        return session;
       })();
       this.sessions.set(name, loading);
     }
@@ -306,7 +316,18 @@ export class LocalBackend {
   }
   predict(body) {
     if (this.closed || this.closing) return Promise.reject(new Error('Valen client is closed'));
-    const result = this.queue.then(() => this._predict(body));
+    const result = this.queue.then(async () => {
+      const started = performance.now();
+      emit(this.options?.onEvent, { event: 'start', backend: 'local', model: this.name });
+      try {
+        const response = await this._predict(body);
+        emit(this.options?.onEvent, { event: 'complete', backend: 'local', model: this.name, usage: response.usage, elapsed: performance.now()-started });
+        return response;
+      } catch (error) {
+        emit(this.options?.onEvent, { event: 'error', backend: 'local', model: this.name, code: 'local_inference_error', elapsed: performance.now()-started });
+        throw error;
+      }
+    });
     this.queue = result.catch(() => {});
     return result;
   }

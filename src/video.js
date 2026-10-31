@@ -117,9 +117,10 @@ async function nodeVideo(path, config, RawImage, options, fallbackFps) {
   }
 }
 async function browserVideo(path, config, RawImage, options, fallbackFps) {
-  const { Input, ALL_FORMATS, UrlSource, BufferSource, VideoSampleSink, VideoSample } = await import(
-    'mediabunny'
-  );
+  let decoder;
+  try { decoder = await import('mediabunny'); }
+  catch (cause) { throw new Error('Browser video decoding requires mediabunny; install mediabunny@1.62.1', { cause }); }
+  const { Input, ALL_FORMATS, UrlSource, BufferSource, VideoSampleSink, VideoSample } = decoder;
   const source = path.startsWith('data:')
     ? new BufferSource(await (await fetch(path)).arrayBuffer())
     : new UrlSource(new URL(path, location.href));
