@@ -1,6 +1,6 @@
 {
   "name": "@valen-team/sdk",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Valen decision SDK for HTTP and local ONNX inference",
   "type": "module",
   "main": "./src/index.js",

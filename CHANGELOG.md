@@ -1,4 +1,4 @@
-# Unreleased
+# 0.3.0 — 2026-10-31
 
 - Browser video decoding now uses the optional `mediabunny` peer (`npm install mediabunny@1.62.1`). HTTP-only installs have no runtime dependencies and avoid unrelated WebCodecs global type conflicts.
 

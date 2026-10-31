@@ -1,3 +1,7 @@
+## Prepared release 0.3.0
+
+Prepared on 2026-10-31. Publication is pending; verify the registry before updating stable install instructions. See CHANGELOG.md for compatibility notes.
+
 # Releasing @valen-team/sdk
 
 `@valen-team/sdk@0.2.1` was published on 2026-10-30 from tag `npm-v0.2.1` through GitHub Actions with npm Trusted Publishing and provenance ([workflow](https://github.com/Valen-Team/valen-sdk-js/actions/runs/40990770510)). Provenance requires `repository.url` in `package.json` to match the GitHub repository's case exactly (`Valen-Team/valen-sdk-js`).

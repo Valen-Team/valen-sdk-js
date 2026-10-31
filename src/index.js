@@ -1,5 +1,5 @@
 /** Decision interfaces over the Valen HTTP API. */
-export const VERSION = '0.2.1';
+export const VERSION = '0.3.0';
 
 import { ValenAPIError, ValenTimeoutError, ValenResponseError } from './errors.js';
 import { validateResponse, responseMetadata, validateRequest } from './validation.js';
