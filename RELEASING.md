@@ -1,6 +1,4 @@
-## Prepared release 0.3.0
-
-Prepared on 2026-10-31. Publication is pending; verify the registry before updating stable install instructions. See CHANGELOG.md for compatibility notes.
+`@valen-team/sdk@0.3.0` was published on 2026-10-31 from `npm-v0.3.0` through [GitHub Actions](https://github.com/Valen-Team/valen-sdk-js/actions/runs/41156099763), with Trusted Publishing and provenance. Public SHA512, `latest` and installed-package smoke tests passed; see `validation/npm-0.3.0.json`.
 
 # Releasing @valen-team/sdk
 

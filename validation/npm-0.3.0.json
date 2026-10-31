@@ -1,0 +1,8 @@
+{
+  "version": "0.3.0",
+  "registry": "https://registry.npmjs.org",
+  "integrity": "sha512-idVEIy2IC1c87zpa9vp3sH/7bkc/XQ9Y6dmUPwUGyjIvkvAif2sSrJu+TREc99ACDw+dUPUBbdCDt3FVGqwWJA==",
+  "latest": true,
+  "installed_http_smoke": "passed",
+  "workflow": "https://github.com/Valen-Team/valen-sdk-js/actions/runs/41156099763"
+}
