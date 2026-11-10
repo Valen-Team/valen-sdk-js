@@ -85,7 +85,7 @@ Yes/no probabilities range from 0 to 1. In multi-question requests, `answers` fo
 
 ## Browser WebGPU
 
-Start the included [Vite example](examples/browser). It uses the `web-portable` variant, provided by the Valen-Decision-1.0 0.8B ONNX repo:
+Start the included [Vite example](examples/browser). It uses the `web-portable` variant of Valen-Decision-1.5 0.8B:
 
 ```bash
 cd examples/browser
@@ -93,9 +93,9 @@ npm install
 npm run dev
 ```
 
-Open the localhost URL printed in the terminal and click **Run locally**. First use downloads the Valen-Decision-1.0 0.8B browser model components; later runs reuse the browser cache. The example includes runtime assets, a page and error feedback. Use a WebGPU-capable browser.
+Open the localhost URL printed in the terminal and click **Run locally**. First use downloads the Valen-Decision-1.5 0.8B browser model components; later runs reuse the browser cache. The example includes runtime assets, a page and error feedback. Use a WebGPU-capable browser.
 
-From `examples/browser`, run `npm run build` to build and `npm run preview` to preview locally. Deploy over HTTPS with the example's COOP/COEP response headers. The full browser variant is about 2.44 GB; single-question warm p50 was 3.13 s in Chrome on Apple M2.
+From `examples/browser`, run `npm run build` to build and `npm run preview` to preview locally. Deploy over HTTPS with the example's COOP/COEP response headers. The full browser variant is about 2.456 GB. With the Valen-Decision-1.0 0.8B browser variant, single-question warm p50 was 3.13 s in Chrome on Apple M2.
 
 ## Images and video
 
@@ -157,7 +157,7 @@ Run `node examples/system-one.mjs` for the same task in SystemOne format. `clien
 
 | Option | Use |
 | --- | --- |
-| `variant` | Node CPU: `fp32` or `q8-mlp`; browser: `web-portable` with the Valen-Decision-1.0 0.8B repo |
+| `variant` | Node CPU: `fp32` or `q8-mlp`; browser: `web-portable` (0.8B) |
 | `cacheDir` / `revision` | Choose a cache location or HF model revision |
 | `localFilesOnly` | Run from an existing cache offline; a local model directory also works |
 | `numThreads` | Node CPU inference threads, default 4 |

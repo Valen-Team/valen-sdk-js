@@ -10,7 +10,7 @@ form.addEventListener('submit', async event => {
   button.disabled = true;
   status.textContent = 'Loading model files and running locally. First use can take several minutes.';
   try {
-    client ??= await Valen.local('Valen-Team/Valen-0.8B-ONNX', {
+    client ??= await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', {
       variant: 'web-portable', device: 'webgpu', wasmPaths: '/ort/',
     });
     const result = await client.decisions({

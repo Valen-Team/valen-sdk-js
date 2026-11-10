@@ -85,7 +85,7 @@ try {
 
 ## 浏览器 WebGPU
 
-仓库包含可直接启动的 [Vite 示例](examples/browser)，使用 Valen-Decision-1.0 0.8B ONNX 仓库提供的 `web-portable` 变体：
+仓库包含可直接启动的 [Vite 示例](examples/browser)，使用 Valen-Decision-1.5 0.8B 的 `web-portable` 变体：
 
 ```bash
 cd examples/browser
@@ -93,9 +93,9 @@ npm install
 npm run dev
 ```
 
-打开终端显示的 localhost 地址，点击 **Run locally**。首次运行会下载 Valen-Decision-1.0 0.8B 的浏览器模型组件，随后复用浏览器缓存。示例提供运行时资源、页面和错误提示；使用支持 WebGPU 的浏览器。
+打开终端显示的 localhost 地址，点击 **Run locally**。首次运行会下载 Valen-Decision-1.5 0.8B 的浏览器模型组件，随后复用浏览器缓存。示例提供运行时资源、页面和错误提示；使用支持 WebGPU 的浏览器。
 
-在 `examples/browser` 中执行 `npm run build` 构建，`npm run preview` 本地预览。部署时通过 HTTPS 提供页面，并保留示例中的 COOP/COEP 响应头。0.8B 的完整浏览器变体约 2.44 GB；Apple M2 Chrome 单问题热运行 p50 为 3.13 秒。
+在 `examples/browser` 中执行 `npm run build` 构建，`npm run preview` 本地预览。部署时通过 HTTPS 提供页面，并保留示例中的 COOP/COEP 响应头。0.8B 的完整浏览器变体约 2.456 GB。Valen-Decision-1.0 0.8B 浏览器变体在 Apple M2 Chrome 上单问题热运行 p50 为 3.13 秒。
 
 ## 图片和视频
 
@@ -157,7 +157,7 @@ try {
 
 | 选项 | 用途 |
 | --- | --- |
-| `variant` | Node CPU 使用 `fp32` 或 `q8-mlp`；浏览器使用 Valen-Decision-1.0 0.8B 仓库的 `web-portable` |
+| `variant` | Node CPU 使用 `fp32` 或 `q8-mlp`；浏览器使用 `web-portable`（0.8B） |
 | `cacheDir` / `revision` | 指定缓存位置或 HF 模型版本 |
 | `localFilesOnly` | 从已有缓存离线运行，也可直接传入本地模型目录 |
 | `numThreads` | Node CPU 推理线程数，默认 4 |
