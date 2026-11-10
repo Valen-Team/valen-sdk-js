@@ -42,6 +42,14 @@ export function validateResponse(request, response) {
       number(a[key], `${path}.${key}`, 0, 1);
       continue;
     }
+    if (q.type === 'bbox') {
+      for (const [key, size] of [['bbox', 4], ['point', 2]]) {
+        if (!Array.isArray(a[key]) || a[key].length !== size) fail(`${path}.${key}`, `expected ${size} numbers`);
+        a[key].forEach(v => number(v, `${path}.${key}`, 0, 1));
+      }
+      number(a.confidence, `${path}.confidence`, 0, 1);
+      continue;
+    }
     const keys = publicProtocol ? (q.type === 'choice' ? q.choices.map(c => c.value) : q.levels.map(c => c.label)) :
       q.type === 'choice' ? (q.criteria instanceof Map ? [...q.criteria.keys()] : Object.keys(q.criteria)) : q.criteria.map((_, i) => String(i));
     const p = a.probabilities;
@@ -80,6 +88,10 @@ export function validateRequest(request) {
     names.add(name);
     if (!object(q) || typeof q.instructions !== 'string' || !q.instructions.trim()) fail(path, 'expected nonempty instructions');
     if (q.type === (publicProtocol ? 'predicate' : 'noul')) continue;
+    if (q.type === 'bbox') {
+      if (!Number.isInteger(q.image ?? 0) || q.image < 0) fail(`${path}.image`, 'expected a nonnegative image index');
+      continue;
+    }
     if (!['choice','score'].includes(q.type)) fail(`${path}.type`, 'unsupported question type; use raw predict for extensions');
     let labels, descriptions;
     if (publicProtocol) {

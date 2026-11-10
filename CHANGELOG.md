@@ -1,3 +1,9 @@
+# 0.4.0 — 2026-11-10
+
+- Run Valen-Decision-1.5 ONNX bundles with `Valen.local`: the compiler records the state prefix and question blocks, and the decision graph receives the block attention mask (`block_mask`) the model was trained with. Outputs match the native model; Valen-Decision-1.0 bundles run as before.
+- Add `bbox` questions: the `bbox(instructions, image = 0)` helper, `BboxQuestion` and `BboxAnswer` types with `bbox`, `point` and `confidence`, for Decisions and SystemOne. Local inference answers them with the bundle's grounding graph; `Valen.remote` passes them through to servers that answer them.
+- A Noul rubric (`criteria` with `true` and `false`) is folded into the instructions for Valen-Decision-1.5, as in the native model.
+
 # 0.3.0 — 2026-10-31
 
 - Browser video decoding now uses the optional `mediabunny` peer (`npm install mediabunny@1.62.1`). HTTP-only installs have no runtime dependencies and avoid unrelated WebCodecs global type conflicts.

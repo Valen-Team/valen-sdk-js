@@ -16,31 +16,31 @@
 
 [Valen](https://github.com/Valen-Team/Valen) is a multimodal System One decision model that returns structured decision probabilities for your tasks. This repository provides the JavaScript SDK for Valen.
 
-Add Valen decisions to a Node.js service or browser application. Turn text, images and video into categories, yes/no probabilities and scores for routing, screening and ranking. Run local ONNX inference or call an existing HTTP service. TypeScript declarations are included.
+Add Valen decisions to a Node.js service or browser application. Turn text, images and video into categories, yes/no probabilities and scores for routing, screening and ranking. Run local ONNX inference or call an existing HTTP service. `Valen.remote` on the hosted API reaches Valen-Decision-1.5 0.8B, 2B and 4B through the model IDs `valen-0.8b`, `valen-2b` and `valen-4b`; `Valen.local` runs the Valen-Decision-1.5 ONNX bundles (`Valen-Decision-1.5-0.8B-ONNX`, `2B`, `4B`, `9B`, `27B`) in Node.js with results that match the native model, answers `bbox` questions with them, and runs the Valen-Decision-1.0 ONNX models (`Valen-0.8B-ONNX`, `Valen-2B-ONNX`, `Valen-4B-ONNX`) in Node.js and the browser. TypeScript declarations are included.
 
 ## Complete application tutorials
 
 Complete workflows are maintained in the [official Cookbook](https://valen-team.github.io/cookbook/): [ticket routing](https://valen-team.github.io/cookbook/ticket-routing/), [when no option fits](https://valen-team.github.io/cookbook/unknown-categories/), [product-image screening](https://valen-team.github.io/cookbook/product-screening/) and [video tagging](https://valen-team.github.io/cookbook/video-tagging/). Code, samples and measured outputs share one source. This repository retains SDK interface and installation examples. `Valen.local` loads ONNX; connect to GGUF services over HTTP. C++ support remains scoped by this repository's reference.
 
 
-## Stable version 0.3.0
+## Stable version 0.4.0
 
-Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.3.0):
+Published on [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.4.0):
 
 ```sh
-npm install @valen-team/sdk@0.3.0
+npm install @valen-team/sdk@0.4.0
 ```
 
 Import with `import { Valen } from '@valen-team/sdk'`, or `require('@valen-team/sdk')` from CommonJS. The package name is `@valen-team/sdk`; the earlier planned `@valen/sdk` was never published on npm and should no longer be used. Inference source and dependency versions are unchanged. HTTP clients need no model download; local ONNX inference additionally requires the optional runtime dependencies listed below.
 
-[GitHub npm-v0.3.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.3.0) records the corresponding source and publication evidence. For a first try, you can also use the [web experience or free API](https://valen-team.github.io/).
+[GitHub npm-v0.4.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.4.0) records the corresponding source and publication evidence. For a first try, you can also use the [web experience or free API](https://valen-team.github.io/).
 
 ## Node.js quick start
 
 Use Node.js 22.12+ or 24 and Git. This example runs on CPU:
 
 ```bash
-git clone --branch npm-v0.3.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
+git clone --branch npm-v0.4.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
 cd valen-sdk-js
 npm ci --ignore-scripts
 node examples/local.mjs
@@ -54,21 +54,21 @@ Address change probability: 0.998
 Explicitness score (0–2): 1.921
 ```
 
-[The complete example](examples/local.mjs) covers `choice`, `predicate` and `score` questions. The first run downloads required components; later runs reuse the cache. Text requests do not download vision weights. See the [0.8B](https://huggingface.co/Valen-Team/Valen-0.8B-ONNX), [2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX) and [4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX) cards for model sizes and variants.
+[The complete example](examples/local.mjs) covers `choice`, `predicate` and `score` questions. The first run downloads required components; later runs reuse the cache. Text requests do not download vision weights. The scripts in `examples/` load the Valen-Decision-1.0 0.8B bundle. See the Valen-Decision-1.5 [0.8B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-0.8B-ONNX), [2B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-2B-ONNX), [4B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-4B-ONNX), [9B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-9B-ONNX) and [27B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-27B-ONNX) cards and the [ONNX guide](https://valen-team.github.io/docs/valen/onnx/#models-and-variants) for model sizes and variants.
 
 To install in your own application:
 
 ```bash
-npm install @valen-team/sdk@0.3.0
+npm install @valen-team/sdk@0.4.0
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
-Save this as `example.mjs` and run `node example.mjs`:
+Save this as `example.mjs` and run `node example.mjs`; it loads Valen-Decision-1.5:
 
 ```js
 import { Valen } from '@valen-team/sdk';
 
-const client = await Valen.local('Valen-Team/Valen-0.8B-ONNX', { variant: 'fp32' });
+const client = await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', { variant: 'fp32' });
 try {
   const result = await client.decisions({
     input: 'Please send my order to my new address.',
@@ -85,7 +85,7 @@ Yes/no probabilities range from 0 to 1. In multi-question requests, `answers` fo
 
 ## Browser WebGPU
 
-Start the included [Vite example](examples/browser):
+Start the included [Vite example](examples/browser). It uses the `web-portable` variant, provided by the Valen-Decision-1.0 0.8B ONNX repo:
 
 ```bash
 cd examples/browser
@@ -93,7 +93,7 @@ npm install
 npm run dev
 ```
 
-Open the localhost URL printed in the terminal and click **Run locally**. First use downloads the 0.8B browser model components; later runs reuse the browser cache. The example includes runtime assets, a page and error feedback. Use a WebGPU-capable browser.
+Open the localhost URL printed in the terminal and click **Run locally**. First use downloads the Valen-Decision-1.0 0.8B browser model components; later runs reuse the browser cache. The example includes runtime assets, a page and error feedback. Use a WebGPU-capable browser.
 
 From `examples/browser`, run `npm run build` to build and `npm run preview` to preview locally. Deploy over HTTPS with the example's COOP/COEP response headers. The full browser variant is about 2.44 GB; single-question warm p50 was 3.13 s in Chrome on Apple M2.
 
@@ -101,12 +101,34 @@ From `examples/browser`, run `npm run build` to build and `npm run preview` to p
 
 Minimal local media interface examples remain in `examples/`. Complete inputs, dependencies, commands, outputs and uncertainty handling live in [product screening](https://valen-team.github.io/cookbook/product-screening/), [video tagging](https://valen-team.github.io/cookbook/video-tagging/) and [direct-video basics](https://valen-team.github.io/cookbook/local-inference/). Shared `Valen/assets/cookbook/` URLs remain stable.
 
+## Bbox questions
+
+A `bbox` question locates something in an image and returns `bbox` `[x1, y1, x2, y2]`, `point` `[x, y]` and `confidence`, normalized to 0–1. Local inference in Node.js answers it with the grounding graph of a Valen-Decision-1.5 bundle, next to other question types in one request. `bbox(instructions, image = 0)` sits beside `predicate`, `choice` and `score`; the types are `BboxQuestion` and `BboxAnswer`. Download the [example image](https://valen-team.github.io/cookbook/code/media/mug-counter.jpg) as `mug-counter.jpg`:
+
+```js
+import { Valen, bbox, predicate } from '@valen-team/sdk';
+
+const client = await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', { variant: 'fp32' });
+try {
+  const result = await client.systemOne(
+    { messages: [{ role: 'user', content: [{ type: 'image_url', image_url: { url: 'mug-counter.jpg' } }] }] },
+    { mug: bbox('The blue mug.'), full: predicate('The mug has coffee in it.') },
+  );
+  const { mug, full } = result.answers;
+  console.log(mug.bbox, mug.point, mug.confidence, full.noul);
+} finally {
+  await client.close();
+}
+```
+
+Decisions requests use `{ name: 'mug', type: 'bbox', instructions: 'The blue mug.', image: 0 }`. `image` is the zero-based index of the image to search. See [bbox questions](https://valen-team.github.io/docs/valen/onnx/#bbox-questions) for measured output.
+
 ## HTTP client
 
 For an existing Valen service, install only the SDK; inference runs on the server:
 
 ```bash
-npm install @valen-team/sdk@0.3.0
+npm install @valen-team/sdk@0.4.0
 ```
 
 ```js
@@ -135,7 +157,7 @@ Run `node examples/system-one.mjs` for the same task in SystemOne format. `clien
 
 | Option | Use |
 | --- | --- |
-| `variant` | Node CPU: `fp32` or `q8-mlp`; browser: `web-portable` |
+| `variant` | Node CPU: `fp32` or `q8-mlp`; browser: `web-portable` with the Valen-Decision-1.0 0.8B repo |
 | `cacheDir` / `revision` | Choose a cache location or HF model revision |
 | `localFilesOnly` | Run from an existing cache offline; a local model directory also works |
 | `numThreads` | Node CPU inference threads, default 4 |

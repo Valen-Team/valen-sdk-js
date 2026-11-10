@@ -1,5 +1,5 @@
 // Compiled by `npm run typecheck`; never executed.
-import { Valen, ValenAPIError, VERSION, choice, predicate, score } from '../src/index.js';
+import { Valen, ValenAPIError, VERSION, bbox, choice, predicate, score } from '../src/index.js';
 
 const client = Valen.remote('https://example.test/v1', { model: 'valen-2b' });
 const controller = new AbortController();
@@ -46,3 +46,10 @@ const p: number = typedDecisions.answers[0].probability;
 const value: true | 'red' = typedDecisions.answers[1].choice;
 // @ts-expect-error predicate answers have no choice
  typedDecisions.answers[0].choice;
+
+const located = await client.decisions({ input: 'red', questions: [{ name: 'mug', type: 'bbox', instructions: 'The mug.', image: 0 }] });
+const corners: [number, number, number, number] = located.answers[0].bbox;
+// @ts-expect-error bbox answers have no probability
+located.answers[0].probability;
+const found = await client.systemOne('x', { mug: bbox('The mug.'), flag: predicate('Flag?') });
+const centre: [number, number] = found.answers.mug.point;

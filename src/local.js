@@ -3,7 +3,36 @@ import { emit } from './events.js';
 import { smartResize, formatTimestamp } from './geometry.js';
 import { withConsistentResize } from './resizing.js';
 import { Assets, isNode } from './assets.js';
-import { Compiler, answer, toInternal, toPublic } from './compiler.js';
+import { Compiler, answer, box, toInternal, toPublic } from './compiler.js';
+
+/**
+ * Additive [L, L] mask for the full-attention layers of Valen-Decision-1.5.
+ *
+ * The state prefix attends within itself. With `block_bidirectional` the rest of the
+ * sequence is one block that sees everything; with `prefix_lm` it is causal; with
+ * `question_blocks` each question sees the prefix, the shared glue and itself, and
+ * `bbox_blocks` merges the decision questions into one such block while each bbox
+ * question (segment ids in `bbox`) keeps its own.
+ */
+export function blockAttentionMask(mode, segments, prefix, bbox = []) {
+  if (!['block_bidirectional', 'prefix_lm', 'question_blocks', 'bbox_blocks'].includes(mode))
+    throw new Error(`Unknown attention mask mode ${mode}`);
+  if (mode === 'bbox_blocks') segments = segments.map((segment) => (segment > 0 && !bbox.includes(segment) ? 1 : segment));
+  const length = segments.length,
+    mask = new Float32Array(length * length);
+  for (let query = 0; query < length; ++query)
+    for (let key = 0; key < length; ++key) {
+      const visible =
+        query < prefix
+          ? key < prefix
+          : mode === 'block_bidirectional' ||
+            (mode === 'prefix_lm'
+              ? key <= query
+              : key < prefix || segments[key] === 0 || segments[key] === segments[query]);
+      if (!visible) mask[query * length + key] = -3.4028234663852886e38;
+    }
+  return mask;
+}
 
 export class LocalBackend {
   static async create(model, options = {}) {
@@ -60,6 +89,7 @@ export class LocalBackend {
     return new this.ort.Tensor(type, data, shape);
   }
   async session(name) {
+    if (!this.variant.graphs[name]) throw new Error(`Missing ONNX graph: ${name}`);
     if (!this.sessions.has(name)) {
       const loading = (async () => {
         emit(this.options.onEvent, { event: 'graph_load_start', backend: 'local', graph: name, model: this.name });
@@ -271,7 +301,8 @@ export class LocalBackend {
       }
       if (cursor !== positions.length) throw new Error('Visual placeholder mismatch');
     }
-    const spans = branches.flatMap((branch) =>
+    const decisions = branches.filter((branch) => !branch.image_grid);
+    const spans = decisions.flatMap((branch) =>
       branch.candidate_spans.flatMap((candidate) =>
         [
           branch.context_span,
@@ -281,14 +312,37 @@ export class LocalBackend {
         ].flat()
       )
     );
+    // The graph scores at least one row.
+    if (!spans.length) spans.push(...Array(4).fill(branches[0].context_span).flat());
     const count = spans.length / 8;
     const session = await this.session('decision');
+    const outputs = ['logits'];
+    if (decisions.length < branches.length) {
+      if (!session.outputNames.includes('final_hidden'))
+        throw new Error('This model does not answer bbox questions');
+      outputs.push('final_hidden');
+    }
     const feeds = {
       inputs_embeds: embedded,
       attention_mask: this.tensor('int64', Array(length).fill(1), [1, length]),
       position_ids: this.tensor('int64', inputs.positions.flat(), [3, 1, length]),
       role_spans: this.tensor('int64', spans, [count, 4, 2]),
     };
+    if (session.inputNames.includes('block_mask')) {
+      // Valen-Decision-1.5: block attention over the compiled segments.
+      const branch = branches[0];
+      if (!branch.segments) throw new Error('This model needs shared_state execution');
+      feeds.block_mask = this.tensor(
+        'float32',
+        blockAttentionMask(
+          this.config.valen_full_attention_mask ?? 'causal',
+          branch.segments,
+          branch.context_span[1],
+          branch.bbox_segments
+        ),
+        [length, length]
+      );
+    }
     const dimensions = {
       batch_size: 1,
       past_sequence_length: 0,
@@ -305,12 +359,27 @@ export class LocalBackend {
       feeds[input.name] = this.tensor(type, new Float32Array(shape.reduce((a, b) => a * b, 1)), shape);
     }
     for (const name of Object.keys(feeds)) if (!session.inputNames.includes(name)) delete feeds[name];
-    const output = (await session.run(feeds)).logits;
-    const logits = Array.from(output.data),
+    const output = await session.run(feeds, outputs);
+    const logits = Array.from(output.logits.data),
       result = [];
     let offset = 0;
     for (const branch of branches) {
-      result.push(logits.slice(offset, (offset += branch.candidate_spans.length)));
+      if (!branch.image_grid) {
+        result.push(logits.slice(offset, (offset += branch.candidate_spans.length)));
+        continue;
+      }
+      let states = output.final_hidden.data;
+      if (states instanceof Uint16Array)
+        states = new Float16Array(states.buffer, states.byteOffset, states.length);
+      const row = (position) => states.subarray(position * hidden, (position + 1) * hidden);
+      const tokens = new Float32Array(branch.image_positions.length * hidden);
+      branch.image_positions.forEach((position, index) => tokens.set(row(position), index * hidden));
+      const grounding = await this.session('grounding');
+      const located = await grounding.run({
+        decision: this.tensor('float32', row(branch.decision_position), [hidden]),
+        tokens: this.tensor('float32', tokens, [branch.image_positions.length, hidden]),
+      });
+      result.push(box(located.logits.data, located.distances.data, branch.image_grid));
     }
     return result;
   }
@@ -340,6 +409,7 @@ export class LocalBackend {
     for (const [, question] of request.questions instanceof Map
       ? request.questions
       : Object.entries(request.questions ?? {})) {
+      if (perType && question.type === 'bbox') continue;
       const value = perType ? temperature[question.type] : temperature;
       if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0)
         throw new Error('temperature must be finite and positive for every question type');
@@ -357,6 +427,10 @@ export class LocalBackend {
     const answers = Object.create(null);
     let index = 0;
     for (const question of compiled.questions) {
+      if (question.type === 'bbox') {
+        answers[question.qid] = values[index++];
+        continue;
+      }
       const logits = [];
       for (const branch of question.branches)
         logits.push(...(compiled.inputs ? values[index++] : (await this.run(branch.inputs, [branch]))[0]));

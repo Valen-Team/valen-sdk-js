@@ -16,7 +16,14 @@ export interface ScoreQuestion {
   instructions: string;
   levels: readonly { readonly label: string; readonly description: string }[];
 }
-export type Question = ChoiceQuestion | PredicateQuestion | ScoreQuestion;
+export interface BboxQuestion {
+  name?: string;
+  type: 'bbox';
+  instructions: string;
+  /** Index of the image to search, in input order (default 0). */
+  image?: number;
+}
+export type Question = ChoiceQuestion | PredicateQuestion | ScoreQuestion | BboxQuestion;
 export type ContentPart =
   | { type: 'input_text'; text: string }
   | { type: 'input_image'; image_url: string }
@@ -46,16 +53,26 @@ export interface ScoreAnswer {
   confidence: number;
   probabilities: { label: string; value: number; probability: number }[];
 }
+export interface BboxAnswer {
+  name: string;
+  type: 'bbox';
+  /** x1, y1, x2, y2 as fractions of the image width and height. */
+  bbox: [number, number, number, number];
+  /** Centre of the box. */
+  point: [number, number];
+  confidence: number;
+}
 export interface DecisionResponse {
   model: string;
-  answers: (ChoiceAnswer | PredicateAnswer | ScoreAnswer)[];
+  answers: (ChoiceAnswer | PredicateAnswer | ScoreAnswer | BboxAnswer)[];
   usage: Usage;
   internal_usage?: { compute_tokens: number };
 }
 export type SystemOneQuestion =
   | { type: 'noul'; instructions: string }
   | { type: 'choice'; instructions: string; criteria: Record<string, string> | Map<string, string> }
-  | { type: 'score'; instructions: string; criteria: string[] };
+  | { type: 'score'; instructions: string; criteria: string[] }
+  | { type: 'bbox'; instructions: string; image?: number };
 export interface NoulAnswer {
   type: 'noul';
   noul: number;
@@ -74,7 +91,8 @@ export interface SystemOneScoreAnswer {
   legend: Record<string, string>;
   probabilities: Record<string, number>;
 }
-export type SystemOneAnswer = NoulAnswer | SystemOneChoiceAnswer | SystemOneScoreAnswer;
+export type SystemOneBboxAnswer = Omit<BboxAnswer, 'name'>;
+export type SystemOneAnswer = NoulAnswer | SystemOneChoiceAnswer | SystemOneScoreAnswer | SystemOneBboxAnswer;
 export interface SystemOneResponse {
   model: string;
   model_id?: string;
@@ -144,6 +162,7 @@ export function choice<const C extends Record<string, string>>(instructions: str
 export function choice(instructions: string, criteria: Map<string, string>): Extract<SystemOneQuestion, { type: 'choice' }>;
 export function predicate(instructions: string): Extract<SystemOneQuestion, { type: 'noul' }>;
 export function score(instructions: string, criteria: string[]): Extract<SystemOneQuestion, { type: 'score' }>;
+export function bbox(instructions: string, image?: number): Extract<SystemOneQuestion, { type: 'bbox' }>;
 
 export interface LocalOptions {
   device?: 'cpu' | 'wasm' | 'webgpu';
@@ -169,6 +188,7 @@ export interface LocalOptions {
 
 export type AnswerFor<Q> = Q extends { type: 'noul' } ? NoulAnswer :
   Q extends { type: 'score' } ? SystemOneScoreAnswer :
+  Q extends { type: 'bbox' } ? SystemOneBboxAnswer :
   Q extends { type: 'choice'; criteria: infer C } ? Omit<SystemOneChoiceAnswer, 'choice' | 'probabilities'> & {
     choice: C extends Map<string, string> ? string : Extract<keyof C, string>;
     probabilities: Record<C extends Map<string, string> ? string : Extract<keyof C, string>, number>;
@@ -196,11 +216,11 @@ export class ValenResponseError extends ValenAPIError {
 export class ValenTimeoutError extends ValenAPIError { constructor(message?: string); }
 
 export type DecisionAnswerFor<Q> = Q extends { type: 'predicate' } ? PredicateAnswer :
-  Q extends { type: 'score' } ? ScoreAnswer : Q extends { type: 'choice'; choices: readonly (infer C)[] } ?
+  Q extends { type: 'score' } ? ScoreAnswer : Q extends { type: 'bbox' } ? BboxAnswer : Q extends { type: 'choice'; choices: readonly (infer C)[] } ?
   Omit<ChoiceAnswer, 'choice' | 'probabilities'> & {
     choice: C extends { value: infer V extends ChoiceValue } ? V : ChoiceValue;
     probabilities: { value: C extends { value: infer V extends ChoiceValue } ? V : ChoiceValue; probability: number }[];
-  } : ChoiceAnswer | PredicateAnswer | ScoreAnswer;
+  } : ChoiceAnswer | PredicateAnswer | ScoreAnswer | BboxAnswer;
 export type TypedDecisionResponse<Q extends readonly Question[]> = Omit<DecisionResponse, 'answers'> & {
   answers: { -readonly [I in keyof Q]: DecisionAnswerFor<Q[I]> };
 };

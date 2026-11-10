@@ -1,5 +1,5 @@
 /** Decision interfaces over the Valen HTTP API. */
-export const VERSION = '0.3.0';
+export const VERSION = '0.4.0';
 
 import { ValenAPIError, ValenTimeoutError, ValenResponseError } from './errors.js';
 import { validateResponse, responseMetadata, validateRequest } from './validation.js';
@@ -174,3 +174,4 @@ class HTTPBackend {
 export const choice = (instructions, criteria) => ({ type: 'choice', instructions, criteria });
 export const predicate = (instructions) => ({ type: 'noul', instructions });
 export const score = (instructions, criteria) => ({ type: 'score', instructions, criteria });
+export const bbox = (instructions, image = 0) => ({ type: 'bbox', instructions, image });

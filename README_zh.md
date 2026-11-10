@@ -16,31 +16,31 @@
 
 [Valen（万澜）](https://github.com/Valen-Team/Valen) 是多模态 System One 决策模型，面向给定任务输出结构化决策概率。本仓库提供 Valen 的 JavaScript SDK。
 
-将 Valen 决策接入 Node.js 服务或浏览器应用。输入文本、图片或视频，获取类别、是非概率和评分，用于路由、筛选和排序。支持本地 ONNX 推理，也可通过 HTTP 调用已有服务；包内提供 TypeScript 类型。
+将 Valen 决策接入 Node.js 服务或浏览器应用。输入文本、图片或视频，获取类别、是非概率和评分，用于路由、筛选和排序。支持本地 ONNX 推理，也可通过 HTTP 调用已有服务；`Valen.remote` 连接托管 API 时，模型 ID `valen-0.8b`、`valen-2b`、`valen-4b` 对应 Valen-Decision-1.5 的 0.8B、2B、4B，`Valen.local` 在 Node.js 中运行 Valen-Decision-1.5 的 ONNX 模型包（`Valen-Decision-1.5-0.8B-ONNX`、`2B`、`4B`、`9B`、`27B`），结果与原生模型一致，并可回答 `bbox` 问题；也在 Node.js 和浏览器中运行 Valen-Decision-1.0 的 ONNX 模型（`Valen-0.8B-ONNX`、`Valen-2B-ONNX`、`Valen-4B-ONNX`）；包内提供 TypeScript 类型。
 
 ## 完整应用教程
 
 完整业务流程只在[官网 Cookbook](https://valen-team.github.io/zh-Hans/cookbook/)维护：[工单分流](https://valen-team.github.io/zh-Hans/cookbook/ticket-routing/)、[候选项都不对](https://valen-team.github.io/zh-Hans/cookbook/unknown-categories/)、[商品图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)。代码、样例和实测结果来自同一维护源。本仓库保留 SDK 接口与安装示例；`Valen.local` 是 ONNX 路径，GGUF 服务使用远程 HTTP 客户端。C++ 集成的支持范围以本仓库说明为准。
 
 
-## 稳定版本 0.3.0
+## 稳定版本 0.4.0
 
-已正式发布到 [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.3.0)：
+已正式发布到 [npm](https://www.npmjs.com/package/@valen-team/sdk/v/0.4.0)：
 
 ```sh
-npm install @valen-team/sdk@0.3.0
+npm install @valen-team/sdk@0.4.0
 ```
 
 应用中使用 `import { Valen } from '@valen-team/sdk'`；CommonJS 中可用 `require('@valen-team/sdk')`。包名是 `@valen-team/sdk`；此前计划的 `@valen/sdk` 未发布到 npm，不应继续使用。推理源码和依赖版本未变。HTTP 客户端无需模型下载；本地 ONNX 推理还需下方列出的可选运行时依赖。
 
-[GitHub npm-v0.3.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.3.0)保留对应源码与发布记录。首次体验也可以使用[网页或免费 API](https://valen-team.github.io/)。
+[GitHub npm-v0.4.0](https://github.com/Valen-Team/valen-sdk-js/releases/tag/npm-v0.4.0)保留对应源码与发布记录。首次体验也可以使用[网页或免费 API](https://valen-team.github.io/)。
 
 ## Node.js 快速开始
 
 建议使用 Node.js 22.12+ 或 24，以及 Git。以下示例使用 CPU：
 
 ```bash
-git clone --branch npm-v0.3.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
+git clone --branch npm-v0.4.0 --depth 1 https://github.com/valen-team/valen-sdk-js.git
 cd valen-sdk-js
 npm ci --ignore-scripts
 node examples/local.mjs
@@ -54,21 +54,21 @@ Address change probability: 0.998
 Explicitness score (0–2): 1.921
 ```
 
-[完整示例](examples/local.mjs) 同时展示 `choice`、`predicate`、`score` 三类问题。首次运行下载所需组件，后续复用缓存；纯文本不下载视觉权重。模型和体积见 [0.8B](https://huggingface.co/Valen-Team/Valen-0.8B-ONNX)、[2B](https://huggingface.co/Valen-Team/Valen-2B-ONNX)、[4B](https://huggingface.co/Valen-Team/Valen-4B-ONNX)。
+[完整示例](examples/local.mjs) 同时展示 `choice`、`predicate`、`score` 三类问题。首次运行下载所需组件，后续复用缓存；纯文本不下载视觉权重。`examples/` 中的脚本加载 Valen-Decision-1.0 0.8B 模型包。模型和体积见 Valen-Decision-1.5 的 [0.8B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-0.8B-ONNX)、[2B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-2B-ONNX)、[4B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-4B-ONNX)、[9B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-9B-ONNX)、[27B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-27B-ONNX) 模型卡和 [ONNX 指南](https://valen-team.github.io/zh-Hans/docs/valen/onnx/#模型与变体)。
 
 在自己的项目中安装：
 
 ```bash
-npm install @valen-team/sdk@0.3.0
+npm install @valen-team/sdk@0.4.0
 npm install @huggingface/tokenizers@0.2.0 @huggingface/jinja@0.5.10 @huggingface/transformers@4.3.1 onnxruntime-node@1.30.0
 ```
 
-将下面代码保存为 `example.mjs`，运行 `node example.mjs`：
+将下面代码保存为 `example.mjs`，运行 `node example.mjs`，加载的是 Valen-Decision-1.5：
 
 ```js
 import { Valen } from '@valen-team/sdk';
 
-const client = await Valen.local('Valen-Team/Valen-0.8B-ONNX', { variant: 'fp32' });
+const client = await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', { variant: 'fp32' });
 try {
   const result = await client.decisions({
     input: 'Please send my order to my new address.',
@@ -85,7 +85,7 @@ try {
 
 ## 浏览器 WebGPU
 
-仓库包含可直接启动的 [Vite 示例](examples/browser)：
+仓库包含可直接启动的 [Vite 示例](examples/browser)，使用 Valen-Decision-1.0 0.8B ONNX 仓库提供的 `web-portable` 变体：
 
 ```bash
 cd examples/browser
@@ -93,7 +93,7 @@ npm install
 npm run dev
 ```
 
-打开终端显示的 localhost 地址，点击 **Run locally**。首次运行会下载 0.8B 的浏览器模型组件，随后复用浏览器缓存。示例提供运行时资源、页面和错误提示；使用支持 WebGPU 的浏览器。
+打开终端显示的 localhost 地址，点击 **Run locally**。首次运行会下载 Valen-Decision-1.0 0.8B 的浏览器模型组件，随后复用浏览器缓存。示例提供运行时资源、页面和错误提示；使用支持 WebGPU 的浏览器。
 
 在 `examples/browser` 中执行 `npm run build` 构建，`npm run preview` 本地预览。部署时通过 HTTPS 提供页面，并保留示例中的 COOP/COEP 响应头。0.8B 的完整浏览器变体约 2.44 GB；Apple M2 Chrome 单问题热运行 p50 为 3.13 秒。
 
@@ -101,12 +101,34 @@ npm run dev
 
 本地媒体接口的最短示例保留在 `examples/`；完整输入、依赖、运行命令、结果与不确定性处理统一见[图片筛选](https://valen-team.github.io/zh-Hans/cookbook/product-screening/)、[短视频标注](https://valen-team.github.io/zh-Hans/cookbook/video-tagging/)和[直接视频基础](https://valen-team.github.io/zh-Hans/cookbook/local-inference/)。共享素材 `Valen/assets/cookbook/` 的 URL 保持不变。
 
+## Bbox 问题
+
+`bbox` 问题在图片中定位目标，返回 `bbox` `[x1, y1, x2, y2]`、`point` `[x, y]` 和 `confidence`，坐标归一化到 0–1。Node.js 本地推理通过 Valen-Decision-1.5 模型包中的 grounding 图回答，可与其他题型放在同一请求中。`bbox(instructions, image = 0)` 与 `predicate`、`choice`、`score` 并列，类型为 `BboxQuestion` 和 `BboxAnswer`。先将[示例图片](https://valen-team.github.io/cookbook/code/media/mug-counter.jpg)下载为 `mug-counter.jpg`：
+
+```js
+import { Valen, bbox, predicate } from '@valen-team/sdk';
+
+const client = await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', { variant: 'fp32' });
+try {
+  const result = await client.systemOne(
+    { messages: [{ role: 'user', content: [{ type: 'image_url', image_url: { url: 'mug-counter.jpg' } }] }] },
+    { mug: bbox('The blue mug.'), full: predicate('The mug has coffee in it.') },
+  );
+  const { mug, full } = result.answers;
+  console.log(mug.bbox, mug.point, mug.confidence, full.noul);
+} finally {
+  await client.close();
+}
+```
+
+Decisions 请求使用 `{ name: 'mug', type: 'bbox', instructions: 'The blue mug.', image: 0 }`。`image` 是待定位图片从 0 开始的序号。实测输出见 [Bbox 问题](https://valen-team.github.io/zh-Hans/docs/valen/onnx/#bbox-问题)。
+
 ## HTTP 客户端
 
 已有 Valen HTTP 服务时，只安装 SDK 即可使用，模型在服务端运行：
 
 ```bash
-npm install @valen-team/sdk@0.3.0
+npm install @valen-team/sdk@0.4.0
 ```
 
 ```js
@@ -135,7 +157,7 @@ try {
 
 | 选项 | 用途 |
 | --- | --- |
-| `variant` | Node CPU 使用 `fp32` 或 `q8-mlp`；浏览器使用 `web-portable` |
+| `variant` | Node CPU 使用 `fp32` 或 `q8-mlp`；浏览器使用 Valen-Decision-1.0 0.8B 仓库的 `web-portable` |
 | `cacheDir` / `revision` | 指定缓存位置或 HF 模型版本 |
 | `localFilesOnly` | 从已有缓存离线运行，也可直接传入本地模型目录 |
 | `numThreads` | Node CPU 推理线程数，默认 4 |

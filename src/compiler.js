@@ -84,6 +84,9 @@ export function toInternal(body) {
           })
         );
       } else item.criteria = values.map((value) => value.description);
+    } else if (question.type === 'bbox') {
+      item.image = question.image ?? 0;
+      assert(Number.isInteger(item.image) && item.image >= 0, 'bbox image must be a nonnegative image index');
     } else assert(question.type === 'predicate', 'Unsupported decision type');
     questions.set(name, item);
   });
@@ -95,6 +98,12 @@ function candidates(question) {
     typeof question.instructions === 'string' && question.instructions.trim(),
     'instructions must be nonempty text'
   );
+  if (question.type === 'bbox') {
+    // Localization has no candidates; the image tokens are the choices.
+    const image = question.image ?? 0;
+    assert(Number.isInteger(image) && image >= 0, 'bbox image must be a nonnegative image index');
+    return [];
+  }
   if (question.type === 'noul')
     return [
       ['true', 'True / 是：满足问题中的条件。'],
@@ -122,6 +131,21 @@ function candidates(question) {
     'Candidate names and descriptions must be nonempty strings'
   );
   return pairs;
+}
+
+/** Valen-Decision-1.5 reads a Noul rubric from the instructions, as its training data does. */
+export function foldNoulCriteria(question) {
+  const pairs = question.criteria ? entries(question.criteria) : [];
+  if (question.type !== 'noul' || !pairs.length) return question;
+  const criteria = new Map(pairs);
+  assert(
+    criteria.size === 2 && criteria.has('true') && criteria.has('false'),
+    'Noul criteria must define true and false'
+  );
+  const { criteria: _, ...folded } = question;
+  folded.instructions +=
+    '\nTrue criterion: ' + criteria.get('true') + '\nFalse criterion: ' + criteria.get('false');
+  return folded;
 }
 
 export class Compiler {
@@ -182,11 +206,10 @@ export class Compiler {
   }
   async compile(request, execution = this.config.qwen_execution ?? 'shared_state') {
     assert(['shared_state', 'question'].includes(execution), 'Unknown execution mode');
-    const selected = entries(request.questions).map(([qid, question]) => ({
-      ...question,
-      qid,
-      pairs: candidates(question),
-    }));
+    const selected = entries(request.questions).map(([qid, question]) => {
+      if (this.config.valen_decision_version === '1.5') question = foldNoulCriteria(question);
+      return { ...question, qid, pairs: candidates(question) };
+    });
     assert(selected.length, 'questions must be nonempty');
     const messages =
       typeof request.state === 'string'
@@ -220,14 +243,17 @@ export class Compiler {
     const questions = [];
     let logicalTokens = baseLength,
       computeTokens = 0;
-    const appendFactory = (suffix) => (text, span) => {
+    const appendFactory = (suffix, segments = []) => (text, span, segment = 0) => {
       const start = baseLength + suffix.length;
       if (!span) {
-        suffix.push(...this.encode(text));
+        const ids = this.encode(text);
+        suffix.push(...ids);
+        segments.push(...Array(ids.length).fill(segment));
         return null;
       }
       const encoded = this.encodeSpan(text, span);
       suffix.push(...encoded.ids);
+      segments.push(...Array(encoded.ids.length).fill(segment));
       return encoded.span.map((index) => start + index);
     };
     const validateLength = (length) =>
@@ -237,23 +263,42 @@ export class Compiler {
       for (const value of [question.instructions, ...question.pairs.flat()]) this.checkText(value);
     };
     if (execution === 'shared_state') {
+      // Valen-Decision-1.5 block ids of the shared sequence: -1 state, 0 glue, 1.. questions.
       const suffix = [],
-        append = appendFactory(suffix);
+        segments = [],
+        append = appendFactory(suffix, segments);
+      // Token positions and (rows, cols) of every image, in input order.
+      const merge = this.config.vision_config.spatial_merge_size,
+        imagePositions = base.flatMap((id, index) => (id === this.config.image_token_id ? [index] : []));
+      let imageOffset = 0;
+      const images = media.images.map((image) => ({
+        image_positions: imagePositions.slice(imageOffset, (imageOffset += image.tokens)),
+        image_grid: [image.grid[1] / merge, image.grid[2] / merge],
+      }));
       append('<|im_start|>user\n');
       selected.forEach((question, index) => {
         checkedQuestion(question);
         const prefix = `Question ${index + 1}\nTask: ${question.type}\nQuestion: `;
-        const instruction = append(prefix + question.instructions + '\nCandidates:\n', [
-          prefix.length,
-          prefix.length + question.instructions.length,
-        ]);
+        const block = index + 1;
+        const image = question.image ?? 0;
+        assert(
+          question.type !== 'bbox' || image < images.length,
+          `${question.qid}: bbox refers to image ${image}, state has ${images.length}`
+        );
+        const instruction = append(
+          prefix + question.instructions + (question.type === 'bbox' ? `\nImage: ${image + 1}\n` : '\nCandidates:\n'),
+          [prefix.length, prefix.length + question.instructions.length],
+          block
+        );
         const spans = [],
           positions = [];
         for (const [key, description] of question.pairs) {
           const prefix = question.type === 'score' ? '' : key + ': ';
-          spans.push(append(prefix + description, [prefix.length, prefix.length + description.length]));
+          spans.push(
+            append(prefix + description, [prefix.length, prefix.length + description.length], block)
+          );
           positions.push(baseLength + suffix.length - 1);
-          append('\n');
+          append('\n', null, block);
         }
         questions.push({
           ...question,
@@ -266,23 +311,31 @@ export class Compiler {
               candidate_spans: spans,
               candidate_positions: positions,
               decision_position: -1,
+              ...(question.type === 'bbox' ? images[image] : {}),
             },
           ],
         });
       });
       append('<|im_end|>\n<|im_start|>assistant\n');
       questions.forEach((question, index) => {
-        append(`Question ${index + 1} Decision:`);
+        append(`Question ${index + 1} Decision:`, null, index + 1);
         question.branches[0].decision_position = baseLength + suffix.length - 1;
-        append('\n');
+        append('\n', null, index + 1);
       });
       const ids = base.concat(suffix);
       validateLength(ids.length);
       const inputs = makeInputs(ids);
-      for (const question of questions) question.branches[0].inputs = inputs;
+      const rowSegments = Array(baseLength).fill(-1).concat(segments);
+      const bboxSegments = questions.flatMap((question, index) => (question.type === 'bbox' ? [index + 1] : []));
+      for (const question of questions) {
+        question.branches[0].inputs = inputs;
+        question.branches[0].segments = rowSegments;
+        question.branches[0].bbox_segments = bboxSegments;
+      }
       return { questions, inputs, logical_tokens: ids.length, compute_tokens: ids.length };
     }
     for (const question of selected) {
+      assert(question.type !== 'bbox', 'bbox questions require shared_state execution');
       checkedQuestion(question);
       const branches = [];
       for (const group of question.type === 'score'
@@ -399,6 +452,37 @@ export function answer(question, logits, temperature = 1) {
   return result;
 }
 
+/** bbox answer from the grounding graph: per-token logits and edge distances in cell units. */
+export function box(logits, distances, [rows, cols]) {
+  const maximum = Math.max(...logits),
+    exps = Array.from(logits, (value) => Math.exp(value - maximum));
+  const sum = exps.reduce((a, b) => a + b, 0),
+    probs = exps.map((value) => value / sum);
+  const index = probs.indexOf(Math.max(...probs));
+  const centre = (token) => [((token % cols) + 0.5) / cols, (Math.floor(token / cols) + 0.5) / rows];
+  const clamp = (value) => Math.min(Math.max(value, 0), 1);
+  const [cx, cy] = centre(index),
+    [left, top, right, bottom] = distances.slice(4 * index, 4 * index + 4);
+  const best = [cx - left / cols, cy - top / rows, cx + right / cols, cy + bottom / rows].map(clamp);
+  let confidence = 0,
+    inside = false;
+  probs.forEach((p, token) => {
+    const [x, y] = centre(token);
+    if (x >= best[0] && x <= best[2] && y >= best[1] && y <= best[3]) {
+      confidence += p;
+      inside = true;
+    }
+  });
+  const round = (value) => Number(value.toFixed(4));
+  const [x1, y1, x2, y2] = best.map(round);
+  return {
+    type: 'bbox',
+    bbox: [x1, y1, x2, y2],
+    point: [round((x1 + x2) / 2), round((y1 + y2) / 2)],
+    confidence: round(clamp(inside ? confidence : probs[index])),
+  };
+}
+
 export function toPublic(body, response) {
   return {
     ...response,
@@ -407,6 +491,8 @@ export function toPublic(body, response) {
         old = response.answers[name];
       const result = { name, type: question.type };
       if (question.type === 'predicate') result.probability = old.noul;
+      else if (question.type === 'bbox')
+        Object.assign(result, { bbox: old.bbox, point: old.point, confidence: old.confidence });
       else {
         const candidates = question.type === 'choice' ? question.choices : question.levels;
         // Use the compiler's explicit candidate order, including integer-like keys.
