@@ -10,7 +10,7 @@ const question = video ? {
   name: 'animal', type: 'choice', instructions: 'Which animals are shown?',
   choices: [{ value: 'sheep', description: 'Sheep' }, { value: 'dogs', description: 'Dogs' }],
 };
-const client = await Valen.local('Valen-Team/Valen-0.8B-ONNX', {
+const client = await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', {
   variant: 'fp32', mediaKwargs: { videos_kwargs: { num_frames: 4, fps: null } },
 });
 try {

@@ -1,6 +1,6 @@
 import { Valen } from '@valen-team/sdk';
 
-const client = await Valen.local('Valen-Team/Valen-0.8B-ONNX', { variant: 'fp32' });
+const client = await Valen.local('Valen-Team/Valen-Decision-1.5-0.8B-ONNX', { variant: 'fp32' });
 try {
   const result = await client.systemOne('I moved. Please ship my order to 12 Elm Street instead.', {
     intent: { type: 'choice', instructions: 'What does the customer want?',

@@ -54,7 +54,7 @@ Address change probability: 0.998
 Explicitness score (0–2): 1.921
 ```
 
-[完整示例](examples/local.mjs) 同时展示 `choice`、`predicate`、`score` 三类问题。首次运行下载所需组件，后续复用缓存；纯文本不下载视觉权重。`examples/` 中的脚本加载 Valen-Decision-1.0 0.8B 模型包。模型和体积见 Valen-Decision-1.5 的 [0.8B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-0.8B-ONNX)、[2B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-2B-ONNX)、[4B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-4B-ONNX)、[9B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-9B-ONNX)、[27B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-27B-ONNX) 模型卡和 [ONNX 指南](https://valen-team.github.io/zh-Hans/docs/valen/onnx/#模型与变体)。
+[完整示例](examples/local.mjs) 同时展示 `choice`、`predicate`、`score` 三类问题。首次运行下载所需组件，后续复用缓存；纯文本不下载视觉权重。`examples/` 中的脚本加载 Valen-Decision-1.5 0.8B 模型包。模型和体积见 Valen-Decision-1.5 的 [0.8B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-0.8B-ONNX)、[2B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-2B-ONNX)、[4B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-4B-ONNX)、[9B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-9B-ONNX)、[27B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-27B-ONNX) 模型卡和 [ONNX 指南](https://valen-team.github.io/zh-Hans/docs/valen/onnx/#模型与变体)。
 
 在自己的项目中安装：
 

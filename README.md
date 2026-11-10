@@ -54,7 +54,7 @@ Address change probability: 0.998
 Explicitness score (0–2): 1.921
 ```
 
-[The complete example](examples/local.mjs) covers `choice`, `predicate` and `score` questions. The first run downloads required components; later runs reuse the cache. Text requests do not download vision weights. The scripts in `examples/` load the Valen-Decision-1.0 0.8B bundle. See the Valen-Decision-1.5 [0.8B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-0.8B-ONNX), [2B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-2B-ONNX), [4B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-4B-ONNX), [9B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-9B-ONNX) and [27B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-27B-ONNX) cards and the [ONNX guide](https://valen-team.github.io/docs/valen/onnx/#models-and-variants) for model sizes and variants.
+[The complete example](examples/local.mjs) covers `choice`, `predicate` and `score` questions. The first run downloads required components; later runs reuse the cache. Text requests do not download vision weights. The scripts in `examples/` load the Valen-Decision-1.5 0.8B bundle. See the Valen-Decision-1.5 [0.8B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-0.8B-ONNX), [2B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-2B-ONNX), [4B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-4B-ONNX), [9B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-9B-ONNX) and [27B](https://huggingface.co/Valen-Team/Valen-Decision-1.5-27B-ONNX) cards and the [ONNX guide](https://valen-team.github.io/docs/valen/onnx/#models-and-variants) for model sizes and variants.
 
 To install in your own application:
 
