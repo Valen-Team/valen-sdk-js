@@ -16,7 +16,7 @@
 
 [Valen](https://github.com/Valen-Team/Valen) is a multimodal System One decision model that returns structured decision probabilities for your tasks. This repository provides the JavaScript SDK for Valen.
 
-Add Valen decisions to a Node.js service or browser application. Turn text, images and video into categories, yes/no probabilities and scores for routing, screening and ranking. Run local ONNX inference or call an existing HTTP service. `Valen.remote` on the hosted API reaches Valen-Decision-1.5 0.8B, 2B and 4B through the model IDs `valen-0.8b`, `valen-2b` and `valen-4b`; `Valen.local` runs the Valen-Decision-1.5 ONNX bundles (`Valen-Decision-1.5-0.8B-ONNX`, `2B`, `4B`, `9B`, `27B`) in Node.js with results that match the native model, answers `bbox` questions with them, and runs the Valen-Decision-1.0 ONNX models (`Valen-0.8B-ONNX`, `Valen-2B-ONNX`, `Valen-4B-ONNX`) in Node.js and the browser. TypeScript declarations are included.
+Add Valen decisions to a Node.js service or browser application. Turn text, images and video into categories, yes/no probabilities and scores for routing, screening and ranking. Run local ONNX inference or call an existing HTTP service. `Valen.remote` on the hosted API reaches Valen-Decision-1.5 0.8B, 2B and 4B through the model IDs `valen-0.8b`, `valen-2b` and `valen-4b`, `bbox` questions included; `Valen.local` runs the Valen-Decision-1.5 ONNX bundles (`Valen-Decision-1.5-0.8B-ONNX`, `2B`, `4B`, `9B`, `27B`) in Node.js with results that match the native model, answers `bbox` questions with them, and runs the Valen-Decision-1.0 ONNX models (`Valen-0.8B-ONNX`, `Valen-2B-ONNX`, `Valen-4B-ONNX`) in Node.js and the browser. TypeScript declarations are included.
 
 ## Complete application tutorials
 
@@ -103,7 +103,7 @@ Minimal local media interface examples remain in `examples/`. Complete inputs, d
 
 ## Bbox questions
 
-A `bbox` question locates something in an image and returns `bbox` `[x1, y1, x2, y2]`, `point` `[x, y]` and `confidence`, normalized to 0–1. Local inference in Node.js answers it with the grounding graph of a Valen-Decision-1.5 bundle, next to other question types in one request. `bbox(instructions, image = 0)` sits beside `predicate`, `choice` and `score`; the types are `BboxQuestion` and `BboxAnswer`. Download the [example image](https://valen-team.github.io/cookbook/code/media/mug-counter.jpg) as `mug-counter.jpg`:
+A `bbox` question locates something in an image and returns `bbox` `[x1, y1, x2, y2]`, `point` `[x, y]` and `confidence`, normalized to 0–1. Local inference in Node.js answers it with the grounding graph of a Valen-Decision-1.5 bundle, next to other question types in one request. `Valen.remote` sends the same question to the hosted API or another Valen-Decision-1.5 service. `bbox(instructions, image = 0)` sits beside `predicate`, `choice` and `score`; the types are `BboxQuestion` and `BboxAnswer`. Download the [example image](https://valen-team.github.io/cookbook/code/media/mug-counter.jpg) as `mug-counter.jpg`:
 
 ```js
 import { Valen, bbox, predicate } from '@valen-team/sdk';
